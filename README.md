@@ -44,24 +44,53 @@ Gana el jugador con mayor puntuación total al completar las 13 categorías.
 | ------------------------ | -------------------------------------------------- |
 | React 19                 | Interfaz de usuario (SPA)                          |
 | Vite 8                   | Bundler y dev server                               |
-| Yarn 4                   | Gestor de paquetes (fijado en `packageManager`)    |
+| Yarn 4                   | Gestor de paquetes (`nodeLinker: node-modules`)    |
 | Vitest + Testing Library | Tests unitarios y de componentes                   |
 | ESLint + Prettier        | Lint y formato (Husky + lint-staged en pre-commit) |
 | GitHub Actions           | CI: lint, tests y build por PR                     |
 
-## Cómo correr
+## Cómo correr desde cero
 
-Requisitos: Node.js 24 (ver `.nvmrc`) y Yarn 4.
+Requisitos:
+
+- **Node.js 24** (ver `.nvmrc`).
+- **Yarn 4** (el proyecto fija su versión en `packageManager` de `package.json`; si usas
+  Corepack, `corepack enable` lo activa automáticamente).
+
+> **Instalación de dependencias:** el proyecto usa Yarn 4 con el linker **`node-modules`**
+> (configurado en `.yarnrc.yml`), en lugar del linker Plug'n'Play (PnP) por defecto, porque
+> Vite desaconseja PnP y no recibe soporte activo para sus bugs específicos. Las dependencias
+> se instalan en un `node_modules` clásico, igual que con npm.
 
 ```bash
-yarn install   # instala dependencias
+# 1. Clona el repositorio y entra en el directorio
+#    (omite este paso si ya tienes el código)
+git clone <url-del-repositorio>
+cd juego-yatzy
+
+# 2. Instala las dependencias (usará node-modules según .yarnrc.yml)
+yarn install
+
+# 3. Verifica que todo está listo
+#    (en CI se usa --immutable para no modificar el lockfile)
+yarn install --immutable
+```
+
+Comandos disponibles:
+
+```bash
 yarn dev       # servidor de desarrollo (http://localhost:5173)
 yarn build     # build de producción en dist/
 yarn preview   # sirve el build localmente
 yarn test      # ejecuta los tests (Vitest)
 yarn lint      # ejecuta ESLint
 yarn format    # formatea el código con Prettier
+yarn format:check  # verifica que el código ya está formateado
 ```
+
+> **Nota para quien migre desde PnP:** si tu copia local arrastra artefactos de
+> Plug'n'Play (`.pnp.cjs`, `.pnp.loader.mjs` o el caché de `.yarn/`), bórralos y
+> reinstala con `rm -rf .pnp.cjs .pnp.loader.mjs node_modules && yarn install`.
 
 ## Estructura del proyecto
 
@@ -104,7 +133,7 @@ la mejor categoría disponible.
 
 ## Calidad
 
-- **Tests**: 83 tests entre el motor de reglas, el bot, hooks y componentes (`yarn test`).
+- **Tests**: 96 tests entre el motor de reglas, el bot, hooks y componentes (`yarn test`).
 - **CI**: pipeline en `.github/workflows/ci.yml` que ejecuta lint, tests y build en cada
   pull request y push a `main`.
 - **Pre-commit**: Husky + lint-staged aplican ESLint y Prettier sobre los archivos modificados.
