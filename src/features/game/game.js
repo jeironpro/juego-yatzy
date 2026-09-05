@@ -54,16 +54,15 @@ export function canRoll(game) {
   return !isGameOver(game) && game.rollNumber < MAX_ROLLS;
 }
 
-// Lanza los dados del turno: la primera tirada completa y las siguientes solo
-// los dados marcados para relanzar. Al lanzar se limpian todas las marcas
-// (la primera tirada lanza los cinco dados aunque no haya marcas)
+// Lanza los dados del turno: si hay marcas relanza solo los dados marcados;
+// si no hay ninguna marca se relanzan los cinco dados. Al lanzar se limpian
+// todas las marcas
 export function rollDiceInGame(game, random = Math.random) {
   if (game.rollNumber >= MAX_ROLLS) return game;
-  const firstRoll = game.rollNumber === 0;
-  if (!firstRoll && !game.reroll.some(Boolean)) return game;
-  const dice = firstRoll
-    ? rollDice(DICE_COUNT, random)
-    : rerollSelected(game.dice, game.reroll, random);
+  const hasMarks = game.reroll.some(Boolean);
+  const dice = hasMarks
+    ? rerollSelected(game.dice, game.reroll, random)
+    : rollDice(DICE_COUNT, random);
   return {
     ...game,
     dice,

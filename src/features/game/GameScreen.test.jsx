@@ -31,9 +31,9 @@ describe('GameScreen', () => {
     expect(screen.getByText('BOT')).toBeInTheDocument();
   });
 
-  it('indica cómo marcar las estrellas tras la primera tirada', () => {
+  it('indica que puede relanzar todos los dados tras la primera tirada', () => {
     render(<GameScreen {...baseProps} />);
-    expect(screen.getByText('Marca las estrellas para relanzar')).toBeInTheDocument();
+    expect(screen.getByText('Pulsa GIRA para relanzar todos los dados')).toBeInTheDocument();
   });
 
   it('anota la categoría al pulsar la celda prospectiva', async () => {
@@ -64,9 +64,9 @@ describe('GameScreen', () => {
     expect(screen.getByRole('button', { name: 'GIRA' })).toBeDisabled();
   });
 
-  it('deshabilita GIRA si no hay estrellas marcadas tras la primera tirada', () => {
+  it('permite relanzar con GIRA aunque no haya estrellas marcadas', () => {
     render(<GameScreen {...baseProps} />);
-    expect(screen.getByRole('button', { name: 'GIRA' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'GIRA' })).toBeEnabled();
   });
 
   it('muestra el mensaje del bot cuando está pensando', () => {

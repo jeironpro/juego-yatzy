@@ -53,10 +53,11 @@ describe('rollDiceInGame', () => {
     expect(game.reroll).toEqual([false, false, false, false, false]);
   });
 
-  it('no relanza nada si no hay dados marcados', () => {
+  it('relanza los cinco dados si no hay marcas', () => {
     const game = rollDiceInGame(createGame(), () => 0.5);
     const after = rollDiceInGame(game, () => 0.99);
-    expect(after).toBe(game);
+    expect(after.dice).toEqual([6, 6, 6, 6, 6]);
+    expect(after.rollNumber).toBe(2);
   });
 
   it('no permite lanzar más allá de las tres tiradas del turno', () => {

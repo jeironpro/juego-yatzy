@@ -44,12 +44,13 @@ distinguen por color: naranja/coral para el jugador 1 y turquesa para el jugador
 ## Espaciados y grilla
 
 - Escala de spacing: 0.25 / 0.5 / 0.75 / 1 / 1.5 / 2 / 3 rem.
-- La aplicación es una **columna vertical centrada de ~560px** sobre fondo coral;
-  el tablero, el marcador y la barra GIRA comparten un ancho máximo de 520px.
+- La aplicación es una **columna vertical centrada de ~480px** sobre fondo coral;
+  el tablero, el marcador y la barra GIRA comparten un ancho máximo de 460px.
 - El tablero usa filas de 7 columnas compartidas: `badge, celda p1, celda p2, divisor,
 badge, celda p1, celda p2`. Las filas alternan franjas crema/beige y las mitades se
   separan con una línea vertical central.
-- Las celdas son cuadrados fijos de `--cell-size` (48px).
+- Las celdas son cuadrados fijos de `--cell-size` (48px) y los badges de etiqueta
+  de `--badge-size` (68px); en pantallas ≤380px se compactan a 40px y 56px.
 
 ## Componentes base
 

@@ -59,8 +59,9 @@
   --radius-full: 9999px;
   --radius-pill: 9999px;
 
-  /* Tamaño de las celdas cuadradas del tablero */
+  /* Tamaño de las celdas cuadradas del tablero y de los badges de etiqueta */
   --cell-size: 48px;
+  --badge-size: 68px;
 
   /* Bordes gruesos estilo cartoon */
   --border-thick: 4px solid var(--color-border);

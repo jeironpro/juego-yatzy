@@ -1,7 +1,7 @@
 .scorecard {
   position: relative;
   width: 100%;
-  max-width: 520px;
+  max-width: 460px;
   margin: 0 auto;
   padding: var(--spacing-md);
   background-color: var(--color-surface);
@@ -28,10 +28,11 @@
   background-color: var(--color-surface-alt);
 }
 
-/* Mitad de la fila: grilla propia de tres columnas (badge flexible + celdas) */
+/* Mitad de la fila: grilla propia de tres columnas (badge fijo + celdas) */
 .scorecard__half {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) var(--cell-size) var(--cell-size);
+  grid-template-columns: var(--badge-size) var(--cell-size) var(--cell-size);
+  justify-content: center;
   gap: 10px;
   align-items: center;
   flex: 1;
@@ -103,9 +104,9 @@
 
 /* Cara de dado pequeña dentro del badge */
 .scorecard__badge .die-face {
-  width: 26px;
-  height: 26px;
-  padding: 14%;
+  width: 34px;
+  height: 34px;
+  padding: 4px;
 }
 
 /* Líneas guía superpuestas: replican la estructura flex de las filas
@@ -125,7 +126,8 @@
   flex: 1;
   min-width: 0;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) var(--cell-size) var(--cell-size);
+  grid-template-columns: var(--badge-size) var(--cell-size) var(--cell-size);
+  justify-content: center;
   gap: 10px;
 }
 
@@ -158,6 +160,7 @@
 @media (max-width: 380px) {
   :root {
     --cell-size: 40px;
+    --badge-size: 56px;
   }
 
   .scorecard__row,
