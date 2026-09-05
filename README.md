@@ -1,6 +1,6 @@
 # Yatzy
 
-Juego de **Yatzy** (también conocido como *Yahtzee*) implementado como aplicación web.
+Juego de **Yatzy** (también conocido como _Yahtzee_) implementado como aplicación web.
 Se puede jugar de dos maneras:
 
 - **Contra el bot** (implementado en JavaScript puro) en tres niveles: Fácil, Medio y Difícil.
@@ -26,28 +26,28 @@ los tres lanzamientos de cada turno.
 
 ### Sección inferior (combinaciones)
 
-| Categoría | Puntuación |
-|---|---|
-| Trío (`3x`) | Suma de todos los dados si hay al menos 3 iguales |
-| Póker (`4x`) | Suma de todos los dados si hay al menos 4 iguales |
-| Full house (casa) | 25 puntos con un trío + una pareja |
+| Categoría                  | Puntuación                                                |
+| -------------------------- | --------------------------------------------------------- |
+| Trío (`3x`)                | Suma de todos los dados si hay al menos 3 iguales         |
+| Póker (`4x`)               | Suma de todos los dados si hay al menos 4 iguales         |
+| Full house (casa)          | 25 puntos con un trío + una pareja                        |
 | Escalera pequeña (`SMALL`) | 30 puntos con 4 consecutivos (1-2-3-4, 2-3-4-5 o 3-4-5-6) |
-| Escalera grande (`LARGE`) | 40 puntos con 5 consecutivos (1-2-3-4-5 o 2-3-4-5-6) |
-| Yatzy | 50 puntos con 5 dados iguales |
-| Oportunidad (`?`) | Suma de todos los dados |
+| Escalera grande (`LARGE`)  | 40 puntos con 5 consecutivos (1-2-3-4-5 o 2-3-4-5-6)      |
+| Yatzy                      | 50 puntos con 5 dados iguales                             |
+| Oportunidad (`?`)          | Suma de todos los dados                                   |
 
 Gana el jugador con mayor puntuación total al completar las 13 categorías.
 
 ## Stack
 
-| Tecnología | Uso |
-|---|---|
-| React 19 | Interfaz de usuario (SPA) |
-| Vite 8 | Bundler y dev server |
-| Yarn 4 | Gestor de paquetes (fijado en `packageManager`) |
-| Vitest + Testing Library | Tests unitarios y de componentes |
-| ESLint + Prettier | Lint y formato (Husky + lint-staged en pre-commit) |
-| GitHub Actions | CI: lint, tests y build por PR |
+| Tecnología               | Uso                                                |
+| ------------------------ | -------------------------------------------------- |
+| React 19                 | Interfaz de usuario (SPA)                          |
+| Vite 8                   | Bundler y dev server                               |
+| Yarn 4                   | Gestor de paquetes (fijado en `packageManager`)    |
+| Vitest + Testing Library | Tests unitarios y de componentes                   |
+| ESLint + Prettier        | Lint y formato (Husky + lint-staged en pre-commit) |
+| GitHub Actions           | CI: lint, tests y build por PR                     |
 
 ## Cómo correr
 
