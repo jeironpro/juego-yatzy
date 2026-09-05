@@ -16,6 +16,7 @@ import {
   getPlayerTotal,
   getWinner,
   hasFilledAllCategories,
+  holdIndices,
   isGameOver,
   rollDiceInGame,
   selectCategory,
@@ -42,7 +43,7 @@ describe('rollDiceInGame', () => {
     expect(game.rollNumber).toBe(1);
   });
 
-  it('conserva los dados marcados y relanza el resto en tiradas siguientes', () => {
+  it('conserva los dados marcados y los mantiene marcados entre tiradas', () => {
     let game = rollDiceInGame(createGame(), () => 0.5);
     game = toggleHold(game, 0);
     const keptValue = game.dice[0];
@@ -50,6 +51,14 @@ describe('rollDiceInGame', () => {
     expect(game.dice[0]).toBe(keptValue);
     expect(game.dice[1]).toBe(6);
     expect(game.rollNumber).toBe(2);
+    expect(game.held).toEqual([true, false, false, false, false]);
+  });
+
+  it('las marcas se limpian al anotar una categoría', () => {
+    let game = rollDiceInGame(createGame(), () => 0.5);
+    game = toggleHold(game, 0);
+    game = rollDiceInGame(game, () => 0.99);
+    game = selectCategory(game, CATEGORY_SIXES);
     expect(game.held).toEqual([false, false, false, false, false]);
   });
 
@@ -89,6 +98,22 @@ describe('toggleHold', () => {
     expect(toggleHold(empty, 0)).toBe(empty);
     const game = rollDiceInGame(createGame(), () => 0.5);
     expect(toggleHold(game, 99).held).toEqual(game.held);
+  });
+});
+
+describe('holdIndices', () => {
+  it('marca solo los índices indicados y limpia las marcas previas', () => {
+    let game = rollDiceInGame(createGame(), () => 0.5);
+    game = toggleHold(game, 0);
+    game = holdIndices(game, [2, 4]);
+    expect(game.held).toEqual([false, false, true, false, true]);
+  });
+
+  it('ignora índices fuera de rango y no marca sin dados lanzados', () => {
+    const empty = createGame();
+    expect(holdIndices(empty, [0])).toBe(empty);
+    const game = rollDiceInGame(createGame(), () => 0.5);
+    expect(holdIndices(game, [99]).held).toEqual([false, false, false, false, false]);
   });
 });
 

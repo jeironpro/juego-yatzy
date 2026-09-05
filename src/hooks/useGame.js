@@ -3,6 +3,7 @@ import { MAX_ROLLS, PLAYER_2 } from '@/features/game/constants.js';
 import {
   createGame,
   getAvailableCategories,
+  holdIndices,
   isGameOver,
   rollDiceInGame,
   selectCategory,
@@ -32,12 +33,9 @@ function botStep(game, difficulty) {
       const category = chooseCategory(game.dice, availableCategories, upperSum, difficulty);
       return selectCategory(game, category, PLAYER_2);
     }
-    let next = game;
-    for (let index = 0; index < game.dice.length; index += 1) {
-      if (keep.includes(index)) {
-        next = toggleHold(next, index);
-      }
-    }
+    // fija las marcas de conservación de forma absoluta (sin acumular con
+    // marcas de tiradas anteriores) y relanza los dados no conservados
+    const next = holdIndices(game, keep);
     return rollDiceInGame(next);
   }
 
