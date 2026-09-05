@@ -4,6 +4,6 @@
   align-items: center;
   gap: var(--spacing-md);
   width: 100%;
-  max-width: 520px;
+  max-width: 460px;
   margin: 0 auto;
 }

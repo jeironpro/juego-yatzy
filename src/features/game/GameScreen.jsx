@@ -29,8 +29,7 @@ function GameScreen({
   const botThinking = botMode && game.turn === PLAYER_2 && !gameOver;
 
   const hasMarks = game.reroll.some(Boolean);
-  const rollDisabled =
-    gameOver || !humanPlaying || !canRoll(game) || (game.rollNumber > 0 && !hasMarks);
+  const rollDisabled = gameOver || !humanPlaying || !canRoll(game);
   const marksDisabled =
     gameOver || !humanPlaying || game.dice.length === 0 || game.rollNumber >= MAX_ROLLS;
   const interactable = humanPlaying && game.dice.length > 0 && !gameOver;
@@ -44,7 +43,7 @@ function GameScreen({
         ? 'Elige una categoría para anotar'
         : hasMarks
           ? 'Pulsa GIRA para relanzar las estrellas'
-          : 'Marca las estrellas para relanzar';
+          : 'Pulsa GIRA para relanzar todos los dados';
 
   // Título del fin de partida según el modo y el ganador
   const overTitle =
