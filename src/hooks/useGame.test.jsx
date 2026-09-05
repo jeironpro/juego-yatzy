@@ -12,14 +12,14 @@ describe('useGame', () => {
     vi.useRealTimers();
   });
 
-  it('lanza, retiene y anota durante el turno del jugador', () => {
+  it('lanza, marca y anota durante el turno del jugador', () => {
     const { result } = renderHook(() => useGame({}));
     act(() => result.current.roll(() => 0.99));
     expect(result.current.game.dice).toEqual([6, 6, 6, 6, 6]);
     expect(result.current.game.rollNumber).toBe(1);
 
-    act(() => result.current.toggleDie(0));
-    expect(result.current.game.held[0]).toBe(true);
+    act(() => result.current.toggleRerollMark(0));
+    expect(result.current.game.reroll[0]).toBe(true);
 
     act(() => result.current.score(CATEGORY_SIXES));
     expect(result.current.game.scores[PLAYER_1][CATEGORY_SIXES]).toBe(30);

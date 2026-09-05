@@ -3,7 +3,7 @@ import { DICE_COUNT, DIE_FACES } from './constants.js';
 import {
   countByFace,
   getRerollIndices,
-  rerollDice,
+  rerollSelected,
   rollDie,
   rollDice,
   uniqueSortedFaces,
@@ -28,19 +28,19 @@ describe('rollDice', () => {
   });
 });
 
-describe('rerollDice', () => {
-  it('conserva los dados retenidos y relanza el resto', () => {
+describe('rerollSelected', () => {
+  it('conserva los dados no marcados y relanza los marcados', () => {
     const random = vi.fn().mockReturnValue(0.99);
-    expect(rerollDice([1, 2, 3, 4, 5], [true, false, false, false, true], random)).toEqual([
-      1, 6, 6, 6, 5,
+    expect(rerollSelected([1, 2, 3, 4, 5], [true, false, false, false, true], random)).toEqual([
+      6, 2, 3, 4, 6,
     ]);
   });
 });
 
 describe('getRerollIndices', () => {
-  it('devuelve los índices de los dados no retenidos', () => {
-    expect(getRerollIndices([true, false, true, false, false])).toEqual([1, 3, 4]);
-    expect(getRerollIndices([true, true, true, true, true])).toEqual([]);
+  it('devuelve los índices de los dados marcados para relanzar', () => {
+    expect(getRerollIndices([true, false, true, false, false])).toEqual([0, 2]);
+    expect(getRerollIndices([true, true, true, true, true])).toEqual([0, 1, 2, 3, 4]);
   });
 });
 

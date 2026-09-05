@@ -1,0 +1,9 @@
+.reroll-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--spacing-md);
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+}

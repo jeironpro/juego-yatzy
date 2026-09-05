@@ -1,36 +1,36 @@
 /* Tokens de diseño — la fuente de verdad es docs/style-guide.md */
 
 :root {
-  /* Paleta de colores (estética idle.space: monocromo con acento cálido) */
-  --color-bg: #fafafa;
-  --color-surface: #ffffff;
-  --color-surface-alt: #f5f5f5;
-  --color-text-primary: #171717;
-  --color-text-secondary: #6b7280;
-  --color-text-tertiary: #9ca3af;
-  --color-border: #e5e7eb;
-  --color-border-strong: #d1d5db;
+  /* Paleta de colores (estilo juego de mesa / cartoon) */
+  --color-bg: #e8917a; /* coral exterior */
+  --color-surface: #f9ebce; /* crema de la tarjeta principal */
+  --color-surface-alt: #f3dfa9; /* beige de franjas alternas */
+  --color-surface-light: #ffffff; /* blanco de badges y círculos */
 
-  --color-primary: #111111;
-  --color-primary-hover: #1f2937;
-  --color-primary-subtle: #f3f4f6;
+  --color-border: #2b2b2b; /* borde grueso oscuro */
+  --color-text-primary: #2b2b2b;
+  --color-text-secondary: #7a6a52;
+  --color-text-on-dark: #ffffff;
 
-  --color-accent: #f59e0b;
-  --color-accent-subtle: #fef3c7;
+  --color-purple: #7a5cf0; /* bonus y esquina de badges */
+  --color-yellow: #ffc93c; /* texto yatzy */
 
-  --color-success: #16a34a;
-  --color-error: #dc2626;
-  --color-warning: #d97706;
+  /* Celdas del jugador 1 (naranja/coral) */
+  --color-cell-p1: #e8916e;
+  --color-cell-p1-border: #b04a36;
 
-  /* Dados */
-  --color-die: #ffffff;
-  --color-die-pip: #171717;
-  --color-die-hold: #fef3c7;
-  --color-die-hold-border: #f59e0b;
+  /* Celdas del jugador 2 (turquesa) */
+  --color-cell-p2: #7fc4c4;
+  --color-cell-p2-border: #3b7d7d;
+
+  /* Barra inferior y estrellas de reroll */
+  --color-bar: #c25a4e;
+  --color-star: #3f3f3f;
+  --color-star-active: #ffc93c;
 
   /* Tipografía */
-  --font-family-base: 'Geist', -apple-system, system-ui, sans-serif;
-  --font-size-display: 2.5rem;
+  --font-family-base: 'Fredoka', system-ui, -apple-system, sans-serif;
+  --font-size-display: 2rem;
   --font-size-title: 1.5rem;
   --font-size-subtitle: 1.125rem;
   --font-size-body: 1rem;
@@ -40,7 +40,6 @@
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
-  --font-weight-extrabold: 800;
 
   /* Espaciado */
   --spacing-xs: 0.25rem;
@@ -50,20 +49,20 @@
   --spacing-xl: 1.5rem;
   --spacing-xxl: 2rem;
   --spacing-xxxl: 3rem;
-  --spacing-xxxxl: 4rem;
 
   /* Radios */
-  --radius-sm: 0.5rem;
-  --radius-md: 0.75rem;
-  --radius-lg: 1rem;
-  --radius-xl: 1.5rem;
-  --radius-full: 9999px;
+  --radius-card: 24px;
+  --radius-badge: 10px;
+  --radius-cell: 8px;
+  --radius-pill: 9999px;
 
-  /* Sombras */
-  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 12px rgb(0 0 0 / 0.08);
-  --shadow-lg: 0 12px 32px rgb(0 0 0 / 0.12);
+  /* Tamaño de las celdas cuadradas del tablero */
+  --cell-size: 48px;
+
+  /* Bordes gruesos estilo cartoon */
+  --border-thick: 4px solid var(--color-border);
+  --border-thin: 2px solid var(--color-border);
 
   /* Foco visible */
-  --focus-ring: 0 0 0 3px rgb(17 17 17 / 0.15);
+  --focus-ring: 0 0 0 3px rgb(122 92 240 / 0.5);
 }

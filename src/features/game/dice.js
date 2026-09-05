@@ -10,14 +10,16 @@ export function rollDice(count = DICE_COUNT, random = Math.random) {
   return Array.from({ length: count }, () => rollDie(random));
 }
 
-// Devuelve los índices de los dados no retenidos
-export function getRerollIndices(held) {
-  return held.map((isHeld, index) => (isHeld ? null : index)).filter((index) => index !== null);
+// Devuelve los índices de los dados marcados para relanzar
+export function getRerollIndices(marks) {
+  return marks
+    .map((isMarked, index) => (isMarked ? index : null))
+    .filter((index) => index !== null);
 }
 
-// Relanza solo los dados no retenidos y conserva los que el jugador mantuvo
-export function rerollDice(dice, held, random = Math.random) {
-  return dice.map((value, index) => (held[index] ? value : rollDie(random)));
+// Relanza solo los dados marcados y conserva el resto
+export function rerollSelected(dice, marks, random = Math.random) {
+  return dice.map((value, index) => (marks[index] ? rollDie(random) : value));
 }
 
 // Cuenta cuántas veces aparece cada cara en una tirada

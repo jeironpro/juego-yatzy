@@ -3,85 +3,97 @@
 Este documento es la **única fuente de verdad** de los valores visuales del proyecto.
 Los valores se materializan como custom properties CSS en `src/styles/tokens.css`.
 
-Dirección visual: estética moderna y minimalista inspirada en [idle.space](https://idle.space/) —
-superficies blancas, monocromo casi total, radios generosos y sombras suaves. El acento
-ámbar se reserva para estados de juego (dados retenidos, celdas seleccionables).
+Dirección visual: estilo **juego de mesa / cartoon** — colores cálidos (coral, crema,
+beige), bordes gruesos oscuros en todos los elementos, tipografía redondeada y bold
+(Fredoka), diseño flat sin sombras pronunciadas. Las dos columnas de jugadores se
+distinguen por color: naranja/coral para el jugador 1 y turquesa para el jugador 2.
 
 ## Paleta de colores
 
-| Token                    | Valor     | Uso                                                  |
-| ------------------------ | --------- | ---------------------------------------------------- |
-| `--color-bg`             | `#fafafa` | Fondo de la aplicación                               |
-| `--color-surface`        | `#ffffff` | Tarjetas, tablero, scoreboard                        |
-| `--color-surface-alt`    | `#f5f5f5` | Superficies secundarias, celdas de etiqueta          |
-| `--color-text-primary`   | `#171717` | Texto principal, títulos                             |
-| `--color-text-secondary` | `#6b7280` | Texto secundario, descripciones                      |
-| `--color-text-tertiary`  | `#9ca3af` | Texto de apoyo, placeholders                         |
-| `--color-border`         | `#e5e7eb` | Bordes de superficies                                |
-| `--color-border-strong`  | `#d1d5db` | Bordes de celdas del tablero                         |
-| `--color-primary`        | `#111111` | Botones principales, texto activo                    |
-| `--color-primary-hover`  | `#1f2937` | Hover de botones principales                         |
-| `--color-primary-subtle` | `#f3f4f6` | Fondo de elementos activos sutiles                   |
-| `--color-accent`         | `#f59e0b` | Estado de juego: dados retenidos, celdas disponibles |
-| `--color-accent-subtle`  | `#fef3c7` | Fondo de dados retenidos                             |
-| `--color-success`        | `#16a34a` | Éxito (bonus conseguido)                             |
-| `--color-error`          | `#dc2626` | Error                                                |
-| `--color-warning`        | `#d97706` | Advertencia                                          |
+| Token                    | Valor     | Uso                                               |
+| ------------------------ | --------- | ------------------------------------------------- |
+| `--color-bg`             | `#e8917a` | Fondo exterior (coral)                            |
+| `--color-surface`        | `#f9ebce` | Fondo de las tarjetas (crema)                     |
+| `--color-surface-alt`    | `#f3dfa9` | Franjas alternas de las filas (beige)             |
+| `--color-surface-light`  | `#ffffff` | Badges de etiqueta, círculos, botones secundarios |
+| `--color-border`         | `#2b2b2b` | Bordes gruesos oscuros (4px)                      |
+| `--color-text-primary`   | `#2b2b2b` | Texto principal                                   |
+| `--color-text-secondary` | `#7a6a52` | Texto secundario                                  |
+| `--color-purple`         | `#7a5cf0` | Esquina de los badges y texto BONUS               |
+| `--color-yellow`         | `#ffc93c` | Texto YATZY y estado activo de las estrellas      |
+| `--color-cell-p1`        | `#e8916e` | Celdas del jugador 1 (naranja)                    |
+| `--color-cell-p1-border` | `#b04a36` | Borde de las celdas del jugador 1                 |
+| `--color-cell-p2`        | `#7fc4c4` | Celdas del jugador 2 (turquesa)                   |
+| `--color-cell-p2-border` | `#3b7d7d` | Borde de las celdas del jugador 2                 |
+| `--color-bar`            | `#c25a4e` | Barra inferior GIRA y botón primario              |
+| `--color-star`           | `#3f3f3f` | Botones estrella de los dados                     |
 
 ## Tipografía
 
-- Familia: **Geist** (Google Fonts), fallback `system-ui`.
+- Familia: **Fredoka** (Google Fonts), fallback `system-ui`. Estilo casual y redondeado.
 - Jerarquía:
-  - Display: `2.5rem` / 800 (título de la home)
-  - Título: `1.5rem` / 700 (secciones)
-  - Subtítulo: `1.125rem` / 600 (nombres de jugadores)
-  - Body: `1rem` / 400 (texto general)
-  - Label: `0.875rem` / 500 (celdas, botones)
-  - Caption: `0.75rem` / 500 (badges, anotaciones)
-- Los títulos usan `letter-spacing: -0.02em` para el aire condensado del estilo de referencia.
+  - Título home: `2.5rem` / 700 con sombra dura (`text-shadow: 3px 3px 0`).
+  - Display del marcador: `2rem` / 700.
+  - Título: `1.5rem` / 700.
+  - Subtítulo: `1.125rem` / 700.
+  - Body: `1rem` / 400–500.
+  - Label: `0.875rem` / 700.
+  - Caption: `0.75rem` / 700.
+- Texto **YATZY** en amarillo con `text-shadow: 2px 2px 0` del borde oscuro.
 
 ## Espaciados y grilla
 
-- Escala de spacing: 0.25 / 0.5 / 0.75 / 1 / 1.5 / 2 / 3 / 4 rem.
-- Breakpoints (mobile-first, media queries `min-width`):
-  - `sm`: 640px — tablero de dos columnas de jugadores
-  - `md`: 768px — controles y layout de página
-  - `lg`: 1024px — tamaño máximo del contenedor del juego
-- El tablero de puntuaciones usa una grilla por filas: etiqueta + celda jugador 1 + celda jugador 2,
-  con contenido centrado en cada celda y bordes compartidos que conectan las celdas de cada jugador.
+- Escala de spacing: 0.25 / 0.5 / 0.75 / 1 / 1.5 / 2 / 3 rem.
+- La aplicación es una **columna vertical centrada de ~560px** sobre fondo coral;
+  el tablero, el marcador y la barra GIRA comparten un ancho máximo de 520px.
+- El tablero usa filas de 7 columnas compartidas: `badge, celda p1, celda p2, divisor,
+badge, celda p1, celda p2`. Las filas alternan franjas crema/beige y las mitades se
+  separan con una línea vertical central.
+- Las celdas son cuadrados fijos de `--cell-size` (48px).
 
 ## Componentes base
 
+### Tarjeta (scoreboard, tablero, fin de partida)
+
+- Fondo `--color-surface`, borde `--border-thick` (4px oscuro), radio `--radius-card` (24px).
+
+### Badge de etiqueta (fila del tablero)
+
+- Fondo blanco, radio 10px, borde morado en la esquina superior izquierda y borde
+  oscuro en el resto (efecto cómic).
+
+### Celda de puntuación
+
+- Cuadrado 42px con borde 3px; jugador 1 naranja (`--color-cell-p1`) con borde rojo
+  oscuro, jugador 2 turquesa con borde turquesa oscuro.
+- Vacías hasta anotar; en el turno del jugador muestran el valor prospectivo y son
+  pulsables (escalan ligeramente al hover).
+
+### Círculo de bonus
+
+- Círculo de 42px blanco con borde naranja (p1) o turquesa (p2) y texto `suma/63`;
+  se rellena de amarillo al alcanzar el umbral.
+
 ### Botón
 
-- Primary: fondo `--color-primary`, texto blanco, radio `--radius-full`, altura 48px, hover `--color-primary-hover`.
-- Secondary: fondo `--color-surface`, borde `--color-border`, texto `--color-text-primary`.
-- Ghost: sin fondo ni borde, texto `--color-text-secondary`.
-- Estados: `hover` (oscurecer), `disabled` (opacidad 0.5, cursor `not-allowed`), foco visible con `--focus-ring`.
+- Bordes de 2px oscuros y radio de píldora; primario rojo ladrillo con texto blanco,
+  secundario blanco con texto oscuro.
 
-### Tarjeta (scoreboard, modo de juego)
+### Estrella de dado (reroll)
 
-- Fondo `--color-surface`, borde `--color-border` 1px, radio `--radius-xl`, sombra `--shadow-md`.
+- Cuadrado gris oscuro (`--color-star`) con icono de estrella blanco y el valor del
+  dado debajo; marcada para relanzar pasa a fondo amarillo con contenido oscuro.
 
-### Dado
+### Barra GIRA
 
-- Cuadrado blanco con puntos negros, radio `--radius-md`, sombra `--shadow-md`.
-- Retenido: fondo `--color-die-hold`, borde 2px `--color-die-hold-border`.
-
-### Celda del tablero
-
-- Fondo `--color-surface`, borde 1px `--color-border-strong`.
-- Disponible: hover con `--color-accent-subtle` y borde acento; ocupa el turno y resalta.
-- Rellenada: valor fijo, sin hover.
-- Celda redonda de bonus: círculo 56px con borde `--color-border-strong` y texto centrado (`0/63`).
+- Barra ancha roja ladrillo (`--color-bar`) con borde grueso, texto "GIRA" a la
+  izquierda y tres círculos blancos numerados 1/2/3 a la derecha (contador de tiradas).
 
 ## Iconografía
 
-- Librería estándar: **Material Symbols (Rounded)** de Google, cargada por Google Fonts.
+- Librería estándar: **Material Symbols (Rounded)** de Google.
 - No se incrustan emojis en la interfaz ni en el código.
-- Iconos usados: `smart_toy` (bot), `group` (2 jugadores), `play_arrow` (jugar),
-  `undo`, `restart_alt`, `arrow_back`, `sports_esports` (título), `cottage` (full house),
-  `style` (escalera pequeña), `view_carousel` (escalera grande), `help` (oportunidad),
-  `casino` (lanzar dados).
-- Los dados del 1 al 6 se dibujan con puntos CSS (no con iconos), para mantener
-  el estilo consistente y escalable.
+- Iconos usados: `star` (dados), `cottage` (full house), `style` (escalera pequeña),
+  `view_carousel` (escalera grande), `help` (oportunidad), `smart_toy`, `group`,
+  `play_arrow`, `restart_alt`, `arrow_back`, `emoji_events`.
+- Los dados del 1 al 6 se dibujan con puntos CSS (`DieFace`), también en el favicon SVG.

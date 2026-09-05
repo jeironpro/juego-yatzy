@@ -2,30 +2,31 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 44px;
-  padding: var(--spacing-xs) var(--spacing-sm);
-  background-color: var(--color-surface);
+  width: var(--cell-size);
+  height: var(--cell-size);
+  border: 3px solid var(--color-border);
+  border-radius: var(--radius-cell);
   font-size: var(--font-size-subtitle);
   font-weight: var(--font-weight-bold);
   font-variant-numeric: tabular-nums;
-  color: var(--color-text-primary);
 }
 
-.scorecard-cell--muted {
-  color: var(--color-text-tertiary);
-  font-weight: var(--font-weight-medium);
+.scorecard-cell--p1 {
+  background-color: var(--color-cell-p1);
+  border-color: var(--color-cell-p1-border);
+}
+
+.scorecard-cell--p2 {
+  background-color: var(--color-cell-p2);
+  border-color: var(--color-cell-p2-border);
 }
 
 .scorecard-cell--selectable {
-  width: 100%;
-  border: none;
-  color: var(--color-text-primary);
-  transition:
-    background-color 150ms ease,
-    color 150ms ease;
+  padding: 0;
+  color: var(--color-border);
+  transition: transform 100ms ease;
 }
 
 .scorecard-cell--selectable:hover {
-  background-color: var(--color-accent-subtle);
-  color: var(--color-accent);
+  transform: scale(1.06);
 }

@@ -1,18 +1,20 @@
 import Button from '@/components/ui/Button.jsx';
 import Scoreboard from '@/features/scoreboard/Scoreboard.jsx';
 import Scorecard from '@/features/scorecard/Scorecard.jsx';
-import DiceRow from '@/features/dice/DiceRow.jsx';
+import RerollRow from '@/features/dice/RerollRow.jsx';
+import RollBar from '@/features/dice/RollBar.jsx';
 import GameOverScreen from '@/features/menu/GameOverScreen.jsx';
 import { MAX_ROLLS, PLAYER_1, PLAYER_2 } from '@/features/game/constants.js';
 import { canRoll, getPlayerTotal, getWinner, isGameOver } from '@/features/game/game.js';
 import './GameScreen.css';
 
-// Pantalla de partida: marcador arriba, tablero al centro y dados con el botón de
-// lanzar debajo. Con botMode activo, el tablero se bloquea mientras juega el bot
+// Pantalla de partida: marcador arriba, tablero al centro y, debajo, las
+// estrellas de reroll con la barra GIRA. Con botMode activo, el tablero se
+// bloquea mientras juega el bot
 function GameScreen({
   game,
   onRoll,
-  onToggleDie,
+  onToggleReroll,
   onScore,
   onRestart,
   onMenu,
@@ -26,8 +28,10 @@ function GameScreen({
   const humanPlaying = botMode ? game.turn === PLAYER_1 : true;
   const botThinking = botMode && game.turn === PLAYER_2 && !gameOver;
 
-  const rollDisabled = gameOver || !humanPlaying || !canRoll(game);
-  const holdDisabled =
+  const hasMarks = game.reroll.some(Boolean);
+  const rollDisabled =
+    gameOver || !humanPlaying || !canRoll(game) || (game.rollNumber > 0 && !hasMarks);
+  const marksDisabled =
     gameOver || !humanPlaying || game.dice.length === 0 || game.rollNumber >= MAX_ROLLS;
   const interactable = humanPlaying && game.dice.length > 0 && !gameOver;
 
@@ -35,10 +39,12 @@ function GameScreen({
   const status = botThinking
     ? 'El bot está pensando…'
     : game.dice.length === 0
-      ? 'Lanza los dados para empezar tu turno'
+      ? 'Pulsa GIRA para lanzar los dados'
       : game.rollNumber >= MAX_ROLLS
         ? 'Elige una categoría para anotar'
-        : `Tirada ${game.rollNumber} de ${MAX_ROLLS}`;
+        : hasMarks
+          ? 'Pulsa GIRA para relanzar las estrellas'
+          : 'Marca las estrellas para relanzar';
 
   // Título del fin de partida según el modo y el ganador
   const overTitle =
@@ -67,13 +73,17 @@ function GameScreen({
         <p className="game-screen__status" role="status">
           {status}
         </p>
-        <DiceRow
+        <RerollRow
           dice={game.dice}
-          held={game.held}
-          onToggleDie={humanPlaying ? onToggleDie : null}
+          marks={game.reroll}
+          onToggleMark={humanPlaying ? onToggleReroll : null}
+          disabled={marksDisabled}
+        />
+        <RollBar
+          rollNumber={game.rollNumber}
+          maxRolls={MAX_ROLLS}
           onRoll={onRoll}
-          rollDisabled={rollDisabled}
-          holdDisabled={holdDisabled}
+          disabled={rollDisabled}
         />
         <div className="game-screen__actions">
           <Button variant="secondary" icon="restart_alt" onClick={onRestart}>
