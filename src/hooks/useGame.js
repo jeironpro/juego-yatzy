@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { MAX_ROLLS, PLAYER_2 } from '@/features/game/constants.js';
+import { chooseCategory, chooseDiceToKeep } from '@/features/bot/bot.js';
 import {
   createGame,
   getAvailableCategories,
@@ -10,7 +11,6 @@ import {
   toggleHold,
 } from '@/features/game/game.js';
 import { computeUpperSum } from '@/features/game/scoring.js';
-import { chooseCategory, chooseDiceToKeep } from '@/features/bot/bot.js';
 
 // Pausa entre acciones del bot para que se aprecie su turno
 const BOT_STEP_DELAY_MS = 1100;
@@ -26,8 +26,9 @@ function botStep(game, difficulty) {
   }
 
   if (game.rollNumber < MAX_ROLLS) {
-    // decide qué dados conservar y los marca para mantenerlos en la tirada
-    const keep = chooseDiceToKeep(game.dice, availableCategories, upperSum, difficulty);
+    // tiradas que quedan después del relanzamiento que se va a decidir
+    const rollsLeft = MAX_ROLLS - game.rollNumber - 1;
+    const keep = chooseDiceToKeep(game.dice, availableCategories, upperSum, difficulty, rollsLeft);
     if (keep.length === game.dice.length) {
       // conserva todos los dados: no hay nada que relanzar, anota directamente
       const category = chooseCategory(game.dice, availableCategories, upperSum, difficulty);

@@ -35,6 +35,28 @@ const UPPER_BONUS_RATE = BONUS_SCORE / BONUS_THRESHOLD;
 const EASY_RANDOM_CATEGORY_CHANCE = 0.25;
 const EASY_RANDOM_KEEP_CHANCE = 0.3;
 
+// Tiradas de anticipación según dificultad: fácil es voraz, medio valora solo
+// la siguiente tirada (sin relanzamientos extra) y difícil además planifica el
+// relanzamiento posterior cuando quedan tiradas disponibles
+const LOOKAHEAD_DEPTH = {
+  facil: 0,
+  medio: 0,
+  dificil: 2,
+};
+
+// Prioridad al descartar categorías que puntúan cero: se quema antes la más
+// difícil de conseguir (yatzy, escaleras) y se reservan las superiores
+const ZERO_PRIORITY = [
+  CATEGORY_YATZY,
+  CATEGORY_LARGE_STRAIGHT,
+  CATEGORY_FULL_HOUSE,
+  CATEGORY_SMALL_STRAIGHT,
+  CATEGORY_FOUR_OF_A_KIND,
+  CATEGORY_THREE_OF_A_KIND,
+  CATEGORY_CHANCE,
+  ...UPPER_CATEGORIES,
+];
+
 // Ajusta el valor de una categoría superior: cada punto vale un poco más
 // mientras la suma acumulada aún pueda alcanzar el umbral del bonus
 function adjustedScore(score, category, upperSum) {
@@ -63,6 +85,15 @@ export function chooseCategory(
   }));
   const bestScore = Math.max(...scored.map((entry) => entry.score));
   const bestCategories = scored.filter((entry) => entry.score === bestScore);
+
+  // Con todo a cero se quema la categoría más difícil de conseguir para
+  // reservar las fáciles y las superiores (que ayudan al bonus)
+  if (bestScore === 0 && bestCategories.length > 1) {
+    return bestCategories.sort(
+      (a, b) => ZERO_PRIORITY.indexOf(a.category) - ZERO_PRIORITY.indexOf(b.category),
+    )[0].category;
+  }
+
   return bestCategories[Math.floor(random() * bestCategories.length)].category;
 }
 
@@ -167,23 +198,33 @@ function greedyKeepIndices(dice, availableCategories, upperSum) {
     .filter((index) => index !== null);
 }
 
-// Genera todas las combinaciones posibles al relanzar count dados
-function* generateRerolls(count) {
-  if (count === 0) {
-    yield [];
-    return;
-  }
-  for (const face of DIE_FACES) {
-    for (const rest of generateRerolls(count - 1)) {
-      yield [face, ...rest];
-    }
-  }
+// Clave canónica de una tirada (ordenada) para cachear resultados por valor
+function diceKey(dice) {
+  return [...dice].sort((a, b) => a - b).join(',');
 }
 
-// Mejor puntuación ajustada de una tirada entre las categorías disponibles;
+// Genera todas las combinaciones con repetición de count caras posibles,
+// en lugar de las 6^count secuencias ordenadas (mucho más rápido y suficiente
+// porque el valor de una tirada no depende del orden de sus dados)
+function* generateOutcomeCombinations(count) {
+  function* combine(start, remaining, prefix) {
+    if (remaining === 0) {
+      yield [...prefix];
+      return;
+    }
+    for (let face = start; face < DIE_FACES.length; face += 1) {
+      prefix.push(DIE_FACES[face]);
+      yield* combine(face, remaining - 1, prefix);
+      prefix.pop();
+    }
+  }
+  yield* combine(0, count, []);
+}
+
+// Puntuación ajustada más alta de una tirada entre las categorías disponibles;
 // las puntuaciones se cachean por combinación de dados
 function bestAdjustedScore(dice, availableCategories, upperSum, scoresCache) {
-  const key = [...dice].sort((a, b) => a - b).join(',');
+  const key = diceKey(dice);
   if (!scoresCache.has(key)) {
     scoresCache.set(key, computeCategoryScores(dice));
   }
@@ -193,23 +234,85 @@ function bestAdjustedScore(dice, availableCategories, upperSum, scoresCache) {
   );
 }
 
-// Valor esperado de conservar un subconjunto de dados: media del mejor ajustado
-// sobre todas las tiradas posibles de los dados restantes
-function expectedValueOfKeep(dice, keptIndices, availableCategories, upperSum, scoresCache) {
-  const keptDice = keptIndices.map((index) => dice[index]);
-  const rerollCount = dice.length - keptDice.length;
-  let total = 0;
-  let outcomes = 0;
-  for (const rerolled of generateRerolls(rerollCount)) {
-    total += bestAdjustedScore(
-      [...keptDice, ...rerolled],
+// Clave de una decisión de conservación: multiconjunto de dados conservados,
+// cuántos se relanzan y tiradas futuras. El valor esperado solo depende de los
+// dados que se quedan, no de cuáles se descartan, así que se memoiza
+function keepKey(keptDice, rerollCount, futureRolls) {
+  return `${diceKey(keptDice)}|${rerollCount}|${futureRolls}`;
+}
+
+// Valor de una tirada con futureRolls relanzamientos por delante: si quedan
+// tiradas, el bot puede anotar ya o conservar una parte y relanzar; si no,
+// debe anotar. Se memoiza por tirada y profundidad para acotar el coste
+function bestOutcomeValue(
+  dice,
+  futureRolls,
+  availableCategories,
+  upperSum,
+  scoresCache,
+  valueCache,
+  keepCache,
+) {
+  if (futureRolls <= 0) {
+    return bestAdjustedScore(dice, availableCategories, upperSum, scoresCache);
+  }
+  const key = `${diceKey(dice)}|${futureRolls}`;
+  if (valueCache.has(key)) {
+    return valueCache.get(key);
+  }
+  let best = bestAdjustedScore(dice, availableCategories, upperSum, scoresCache);
+  for (const kept of allKeepSubsets(dice.length)) {
+    const keptDice = kept.map((index) => dice[index]);
+    const rerollCount = dice.length - kept.length;
+    const value = expectedValueOfKeep(
+      keptDice,
+      rerollCount,
+      futureRolls - 1,
       availableCategories,
       upperSum,
       scoresCache,
+      valueCache,
+      keepCache,
+    );
+    if (value > best) best = value;
+  }
+  valueCache.set(key, best);
+  return best;
+}
+
+// Valor esperado de conservar unos dados concretos: media del valor de la
+// mejor continuación sobre todas las combinaciones posibles de dados relanzados
+function expectedValueOfKeep(
+  keptDice,
+  rerollCount,
+  futureRolls,
+  availableCategories,
+  upperSum,
+  scoresCache,
+  valueCache,
+  keepCache,
+) {
+  const key = keepKey(keptDice, rerollCount, futureRolls);
+  if (keepCache.has(key)) {
+    return keepCache.get(key);
+  }
+  let total = 0;
+  let outcomes = 0;
+  for (const rerolled of generateOutcomeCombinations(rerollCount)) {
+    total += bestOutcomeValue(
+      [...keptDice, ...rerolled],
+      futureRolls,
+      availableCategories,
+      upperSum,
+      scoresCache,
+      valueCache,
+      keepCache,
     );
     outcomes += 1;
   }
-  return total / outcomes;
+  const value = total / outcomes;
+  keepCache.set(key, value);
+  return value;
 }
 
 // Todos los subconjuntos de índices posibles (2^n combinaciones)
@@ -225,19 +328,31 @@ function allKeepSubsets(length) {
   return subsets;
 }
 
-// Elige el subconjunto de dados a conservar maximizando el valor esperado;
-// ante empate prefiere conservar más dados
-function expectedValueKeepIndices(dice, availableCategories, upperSum) {
-  const scoresCache = new Map();
+// Elige el subconjunto de dados a conservar maximizando el valor esperado con
+// la profundidad de búsqueda indicada; ante empate prefiere conservar más dados
+function expectedValueKeepIndices(
+  dice,
+  availableCategories,
+  upperSum,
+  futureRolls,
+  scoresCache,
+  valueCache,
+  keepCache,
+) {
   let best = [];
   let bestExpectedValue = -Infinity;
   for (const subset of allKeepSubsets(dice.length)) {
+    const keptDice = subset.map((index) => dice[index]);
+    const rerollCount = dice.length - subset.length;
     const expectedValue = expectedValueOfKeep(
-      dice,
-      subset,
+      keptDice,
+      rerollCount,
+      futureRolls,
       availableCategories,
       upperSum,
       scoresCache,
+      valueCache,
+      keepCache,
     );
     if (
       expectedValue > bestExpectedValue ||
@@ -256,19 +371,33 @@ export function chooseDiceToKeep(
   availableCategories,
   upperSum,
   difficulty = DEFAULT_DIFFICULTY,
+  rollsLeft = 0,
   random = Math.random,
 ) {
-  // Nivel difícil: búsqueda de valor esperado sobre todos los subconjuntos
-  if (difficulty === 'dificil') {
-    return expectedValueKeepIndices(dice, availableCategories, upperSum);
+  const depth = LOOKAHEAD_DEPTH[difficulty] ?? 1;
+
+  // Nivel fácil: heurística voraz con alguna decisión aleatoria
+  if (difficulty === 'facil') {
+    const greedy = greedyKeepIndices(dice, availableCategories, upperSum);
+    if (random() < EASY_RANDOM_KEEP_CHANCE) {
+      return [Math.floor(random() * dice.length)];
+    }
+    return greedy;
   }
 
-  const greedy = greedyKeepIndices(dice, availableCategories, upperSum);
-
-  // Nivel fácil: a veces conserva un único dado al azar
-  if (difficulty === 'facil' && random() < EASY_RANDOM_KEEP_CHANCE) {
-    return [Math.floor(random() * dice.length)];
-  }
-
-  return greedy;
+  // Niveles con búsqueda: se mira hacia delante tanto como la dificultad y las
+  // tiradas restantes permitan
+  const futureRolls = Math.min(depth, rollsLeft);
+  const scoresCache = new Map();
+  const valueCache = new Map();
+  const keepCache = new Map();
+  return expectedValueKeepIndices(
+    dice,
+    availableCategories,
+    upperSum,
+    futureRolls,
+    scoresCache,
+    valueCache,
+    keepCache,
+  );
 }
