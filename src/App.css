@@ -1,14 +1,14 @@
 .app {
-  display: flex;
-  min-height: 100vh;
-  background-color: var(--color-bg);
+    display: flex;
+    min-height: 100vh;
+    background-color: var(--color-bg);
 }
 
 /* El hijo único se centra en ambos ejes con márgenes automáticos; cuando el
    contenido supera la altura del viewport, los márgenes colapsan y la página
    sigue siendo desplazable desde arriba */
 .app > * {
-  width: 100%;
-  max-width: 480px;
-  margin: auto;
+    width: 100%;
+    max-width: 480px;
+    margin: auto;
 }

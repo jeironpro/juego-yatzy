@@ -7,46 +7,46 @@ import './App.css';
 
 // Aplicación principal: alterna entre la pantalla de inicio y la partida
 function App() {
-  const [screen, setScreen] = useState('home');
-  const [mode, setMode] = useState('local');
-  const [difficulty, setDifficulty] = useState(DEFAULT_DIFFICULTY);
-  const { game, roll, toggleHoldMark, score, restart } = useGame({
-    botDifficulty: mode === 'bot' ? difficulty : null,
-  });
+    const [screen, setScreen] = useState('home');
+    const [mode, setMode] = useState('local');
+    const [difficulty, setDifficulty] = useState(DEFAULT_DIFFICULTY);
+    const { game, roll, toggleHoldMark, score, restart } = useGame({
+        botDifficulty: mode === 'bot' ? difficulty : null,
+    });
 
-  const startGame = (nextMode, nextDifficulty) => {
-    setMode(nextMode);
-    setDifficulty(nextDifficulty);
-    restart();
-    setScreen('game');
-  };
+    const startGame = (nextMode, nextDifficulty) => {
+        setMode(nextMode);
+        setDifficulty(nextDifficulty);
+        restart();
+        setScreen('game');
+    };
 
-  const goHome = () => {
-    // se reinicia la partida para cancelar turnos pendientes del bot al salir
-    restart();
-    setScreen('home');
-  };
+    const goHome = () => {
+        // se reinicia la partida para cancelar turnos pendientes del bot al salir
+        restart();
+        setScreen('home');
+    };
 
-  return (
-    <div className="app">
-      {screen === 'home' ? (
-        <HomeScreen onStart={startGame} />
-      ) : (
-        <GameScreen
-          game={game}
-          onRoll={roll}
-          onToggleHold={toggleHoldMark}
-          onScore={score}
-          onRestart={restart}
-          onMenu={goHome}
-          player1Name={mode === 'bot' ? 'TÚ' : 'Jugador 1'}
-          player2Name={mode === 'bot' ? 'BOT' : 'Jugador 2'}
-          badge={mode === 'bot' ? DIFFICULTY_LABELS[difficulty] : '2 JUGADORES'}
-          botMode={mode === 'bot'}
-        />
-      )}
-    </div>
-  );
+    return (
+        <div className="app">
+            {screen === 'home' ? (
+                <HomeScreen onStart={startGame} />
+            ) : (
+                <GameScreen
+                    game={game}
+                    onRoll={roll}
+                    onToggleHold={toggleHoldMark}
+                    onScore={score}
+                    onRestart={restart}
+                    onMenu={goHome}
+                    player1Name={mode === 'bot' ? 'TÚ' : 'Jugador 1'}
+                    player2Name={mode === 'bot' ? 'BOT' : 'Jugador 2'}
+                    badge={mode === 'bot' ? DIFFICULTY_LABELS[difficulty] : '2 JUGADORES'}
+                    botMode={mode === 'bot'}
+                />
+            )}
+        </div>
+    );
 }
 
 export default App;
