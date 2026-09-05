@@ -23,10 +23,11 @@
   --color-cell-p2: #7fc4c4;
   --color-cell-p2-border: #3b7d7d;
 
-  /* Barra inferior y estrellas de reroll */
+  /* Barra inferior, estrellas de reroll y dados */
   --color-bar: #c25a4e;
   --color-star: #3f3f3f;
   --color-star-active: #ffc93c;
+  --color-die-pip: #2b2b2b;
 
   /* Tipografía */
   --font-family-base: 'Fredoka', system-ui, -apple-system, sans-serif;
@@ -54,6 +55,8 @@
   --radius-card: 24px;
   --radius-badge: 10px;
   --radius-cell: 8px;
+  --radius-lg: 1rem;
+  --radius-full: 9999px;
   --radius-pill: 9999px;
 
   /* Tamaño de las celdas cuadradas del tablero */
