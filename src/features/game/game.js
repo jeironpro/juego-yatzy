@@ -52,11 +52,10 @@ export function getAvailableCategories(game, player) {
 // Indica si el jugador en turno puede volver a lanzar los dados
 export function canRoll(game) {
   return !isGameOver(game) && game.rollNumber < MAX_ROLLS;
-}
-
-// Lanza los dados del turno: conserva los dados marcados y relanza el resto;
-// si no hay ninguna marca se relanzan los cinco dados. Al lanzar se limpian
-// todas las marcas
+} // Lanza los dados del turno: conserva los dados marcados y relanza el resto;
+// si no hay ninguna marca se relanzan los cinco dados. Las marcas se mantienen
+// entre tiradas para que los dados elegidos sigan conservados
+// (solo se limpian al anotar una categoría)
 export function rollDiceInGame(game, random = Math.random) {
   if (game.rollNumber >= MAX_ROLLS) return game;
   const hasHeld = game.held.some(Boolean);
@@ -64,7 +63,7 @@ export function rollDiceInGame(game, random = Math.random) {
   return {
     ...game,
     dice,
-    held: Array(DICE_COUNT).fill(false),
+    held: [...game.held],
     rollNumber: game.rollNumber + 1,
   };
 }
@@ -76,6 +75,18 @@ export function toggleHold(game, index) {
   if (index < 0 || index >= DICE_COUNT) return game;
   const held = [...game.held];
   held[index] = !held[index];
+  return { ...game, held };
+}
+
+// Conserva exactamente los dados indicados: limpia las marcas previas y deja
+// marcados solo esos índices (lo usa el bot para fijar su decisión sin
+// depender de marcas anteriores)
+export function holdIndices(game, indices) {
+  if (game.dice.length === 0 || game.rollNumber >= MAX_ROLLS) return game;
+  const held = Array(DICE_COUNT).fill(false);
+  indices.forEach((index) => {
+    if (index >= 0 && index < DICE_COUNT) held[index] = true;
+  });
   return { ...game, held };
 }
 
