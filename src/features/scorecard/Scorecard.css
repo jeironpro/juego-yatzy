@@ -1,0 +1,103 @@
+.scorecard {
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+  padding: var(--spacing-md);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+}
+
+/* Grilla conectada: las celdas comparten líneas de 1px (celdas unidas al centro) */
+.scorecard__grid {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr 1fr;
+  gap: 1px;
+  overflow: hidden;
+  background-color: var(--color-border-strong);
+  border-radius: var(--radius-lg);
+}
+
+.scorecard__row {
+  display: contents;
+}
+
+.scorecard__label-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background-color: var(--color-surface-alt);
+}
+
+.scorecard__label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  color: var(--color-text-primary);
+}
+
+.scorecard__label .material-symbols-rounded {
+  font-size: 22px;
+}
+
+.scorecard__label-text {
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-bold);
+}
+
+.scorecard__label-caption {
+  font-size: 0.625rem;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.5px;
+  color: var(--color-text-secondary);
+}
+
+.scorecard__die {
+  display: block;
+  width: 22px;
+  height: 22px;
+}
+
+.scorecard__bonus-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-bold);
+}
+
+.scorecard__bonus-value {
+  font-size: var(--font-size-caption);
+  color: var(--color-success);
+}
+
+.scorecard__bonus-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-surface);
+}
+
+/* Línea divisora entre la sección superior y la inferior */
+.scorecard__divider {
+  height: 3px;
+  margin: var(--spacing-sm) 0;
+  background-color: var(--color-primary);
+  border-radius: var(--radius-full);
+}
+
+@media (min-width: 640px) {
+  .scorecard {
+    max-width: 620px;
+  }
+
+  .scorecard__label-cell,
+  .scorecard-cell {
+    min-height: 52px;
+  }
+}

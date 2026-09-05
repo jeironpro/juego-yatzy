@@ -1,0 +1,31 @@
+.scorecard-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background-color: var(--color-surface);
+  font-size: var(--font-size-subtitle);
+  font-weight: var(--font-weight-bold);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-primary);
+}
+
+.scorecard-cell--muted {
+  color: var(--color-text-tertiary);
+  font-weight: var(--font-weight-medium);
+}
+
+.scorecard-cell--selectable {
+  width: 100%;
+  border: none;
+  color: var(--color-text-primary);
+  transition:
+    background-color 150ms ease,
+    color 150ms ease;
+}
+
+.scorecard-cell--selectable:hover {
+  background-color: var(--color-accent-subtle);
+  color: var(--color-accent);
+}
