@@ -1,4 +1,5 @@
 .scorecard {
+  position: relative;
   width: 100%;
   max-width: 520px;
   margin: 0 auto;
@@ -13,16 +14,11 @@
   position: relative;
 }
 
-/* Cada fila es una grilla de 7 columnas compartidas por ambas mitades:
-   badge izquierdo, celdas naranja y turquesa, divisor central, badge
-   derecho y de nuevo las dos celdas */
+/* Cada fila es un flex con dos mitades y un divisor central sólido */
 .scorecard__row {
-  display: grid;
-  grid-template-columns:
-    minmax(0, 1fr) var(--cell-size) var(--cell-size) 2px
-    minmax(0, 1fr) var(--cell-size) var(--cell-size);
-  column-gap: 10px;
+  display: flex;
   align-items: center;
+  gap: 10px;
   padding: 10px 12px;
   background-color: var(--color-surface);
 }
@@ -32,9 +28,21 @@
   background-color: var(--color-surface-alt);
 }
 
-/* Las mitades no generan caja: sus hijos se colocan en la grilla de la fila */
+/* Mitad de la fila: grilla propia de tres columnas (badge flexible + celdas) */
 .scorecard__half {
-  display: contents;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--cell-size) var(--cell-size);
+  gap: 10px;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Divisor vertical central entre las dos mitades */
+.scorecard__row-divider {
+  width: 2px;
+  align-self: stretch;
+  background-color: var(--color-border);
 }
 
 /* Badge cuadrado de etiqueta: fondo blanco y borde morado en la esquina superior */
@@ -82,12 +90,6 @@
 }
 
 /* Badge del bonus: texto en morado */
-.scorecard__badge--bonus {
-  border-color: var(--color-purple);
-  border-right-color: var(--color-border);
-  border-bottom-color: var(--color-border);
-}
-
 .scorecard__badge--bonus .scorecard__badge-text {
   color: var(--color-purple);
 }
@@ -106,18 +108,25 @@
   padding: 14%;
 }
 
-/* Líneas guía superpuestas: mismas columnas que las filas */
+/* Líneas guía superpuestas: replican la estructura flex de las filas
+   (mitad + divisor + mitad) para que las líneas atraviesen las celdas */
 .scorecard__guides {
   position: absolute;
   inset: 0;
   padding: 0 12px;
-  display: grid;
-  grid-template-columns:
-    minmax(0, 1fr) var(--cell-size) var(--cell-size) 2px
-    minmax(0, 1fr) var(--cell-size) var(--cell-size);
-  column-gap: 10px;
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
   pointer-events: none;
   z-index: 2;
+}
+
+.scorecard__guides-half {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--cell-size) var(--cell-size);
+  gap: 10px;
 }
 
 /* Línea fina discontinua que atraviesa cada columna de celdas */
@@ -128,27 +137,39 @@
   border-left: 2px dashed rgb(43 43 43 / 0.35);
 }
 
-.scorecard__guides-line--1 {
+.scorecard__guides-line--1,
+.scorecard__guides-line--3 {
   grid-column: 2;
 }
 
-.scorecard__guides-line--2 {
+.scorecard__guides-line--2,
+.scorecard__guides-line--4 {
   grid-column: 3;
 }
 
-.scorecard__guides-line--3 {
-  grid-column: 6;
-}
-
-.scorecard__guides-line--4 {
-  grid-column: 7;
-}
-
-/* Divisor central sólido entre las dos mitades */
+/* Divisor central sólido de la superposición (cubre el alto completo) */
 .scorecard__guides-divider {
-  grid-column: 4;
-  justify-self: center;
   width: 2px;
-  height: 100%;
   background-color: var(--color-border);
+}
+
+/* Pantallas estrechas: celdas y separaciones más compactas para que los
+   badges de etiqueta sigan teniendo espacio sin recortar su contenido */
+@media (max-width: 380px) {
+  :root {
+    --cell-size: 40px;
+  }
+
+  .scorecard__row,
+  .scorecard__guides {
+    column-gap: 6px;
+    gap: 6px;
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .scorecard__half,
+  .scorecard__guides-half {
+    gap: 6px;
+  }
 }
