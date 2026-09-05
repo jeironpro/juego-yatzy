@@ -1,10 +1,10 @@
 // Niveles de dificultad del bot
-export const DIFFICULTIES = ['facil', 'medio', 'dificil'];
+export const DIFFICULTIES = ['easy', 'medium', 'hard'];
 
 export const DIFFICULTY_LABELS = {
-  facil: 'Fácil',
-  medio: 'Medio',
-  dificil: 'Difícil',
+    easy: 'Fácil',
+    medium: 'Medio',
+    hard: 'Difícil',
 };
 
-export const DEFAULT_DIFFICULTY = 'dificil';
+export const DEFAULT_DIFFICULTY = 'hard';

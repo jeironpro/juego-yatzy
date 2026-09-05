@@ -32,14 +32,22 @@ distinguen por color: naranja/coral para el jugador 1 y turquesa para el jugador
 
 - Familia: **Fredoka** (Google Fonts), fallback `system-ui`. Estilo casual y redondeado.
 - Jerarquía:
-  - Título home: `2.5rem` / 700 con sombra dura (`text-shadow: 3px 3px 0`).
-  - Display del marcador: `2rem` / 700.
-  - Título: `1.5rem` / 700.
-  - Subtítulo: `1.125rem` / 700.
-  - Body: `1rem` / 400–500.
-  - Label: `0.875rem` / 700.
-  - Caption: `0.75rem` / 700.
+    - Título home: `2.5rem` / 700 con sombra dura (`text-shadow: 3px 3px 0`).
+    - Display del marcador: `2rem` / 700.
+    - Título: `1.5rem` / 700.
+    - Subtítulo: `1.125rem` / 700.
+    - Body: `1rem` / 400–500.
+    - Label: `0.875rem` / 700.
+    - Caption: `0.75rem` / 700.
 - Texto **YATZY** en amarillo con `text-shadow: 2px 2px 0` del borde oscuro.
+
+## Estilo de código
+
+- **Indentación de 4 espacios** (sin tabs) en JS, JSX y CSS; la gestiona Prettier
+  (`.prettierrc.json`: `tabWidth: 4`, `useTabs: false`) y se verifica en CI con
+  `yarn format:check`.
+- El **código se escribe en inglés** (identificadores, nombres de funciones,
+  constantes) y se **comenta en español**. Los textos de interfaz van en español.
 
 ## Espaciados y grilla
 

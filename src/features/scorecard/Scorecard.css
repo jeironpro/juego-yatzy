@@ -1,130 +1,130 @@
 .scorecard {
-  position: relative;
-  width: 100%;
-  max-width: 460px;
-  margin: 0 auto;
-  padding: var(--spacing-md);
-  background-color: var(--color-surface);
-  border: var(--border-thick);
-  border-radius: var(--radius-card);
+    position: relative;
+    width: 100%;
+    max-width: 460px;
+    margin: 0 auto;
+    padding: var(--spacing-md);
+    background-color: var(--color-surface);
+    border: var(--border-thick);
+    border-radius: var(--radius-card);
 }
 
 /* Contenedor relativo para las líneas guía superpuestas */
 .scorecard__rows {
-  position: relative;
+    position: relative;
 }
 
 /* Cada fila es un flex con dos mitades y un divisor central sólido */
 .scorecard__row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
-  background-color: var(--color-surface);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background-color: var(--color-surface);
 }
 
 /* Franjas de fondo alternas crema / beige */
 .scorecard__row:nth-child(even) {
-  background-color: var(--color-surface-alt);
+    background-color: var(--color-surface-alt);
 }
 
 /* Mitad de la fila: grilla propia de tres columnas (badge fijo + celdas) */
 .scorecard__half {
-  display: grid;
-  grid-template-columns: var(--badge-size) var(--cell-size) var(--cell-size);
-  justify-content: center;
-  gap: 10px;
-  align-items: center;
-  flex: 1;
-  min-width: 0;
+    display: grid;
+    grid-template-columns: var(--badge-size) var(--cell-size) var(--cell-size);
+    justify-content: center;
+    gap: 10px;
+    align-items: center;
+    flex: 1;
+    min-width: 0;
 }
 
 /* Divisor vertical central entre las dos mitades */
 .scorecard__row-divider {
-  width: 2px;
-  align-self: stretch;
-  background-color: var(--color-border);
+    width: 2px;
+    align-self: stretch;
+    background-color: var(--color-border);
 }
 
 /* Badge cuadrado de etiqueta: fondo blanco y borde morado en la esquina superior */
 .scorecard__badge {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-  min-height: 48px;
-  padding: var(--spacing-xs) var(--spacing-sm);
-  background-color: var(--color-surface-light);
-  border: 3px solid var(--color-purple);
-  border-right-color: var(--color-border);
-  border-bottom-color: var(--color-border);
-  border-radius: var(--radius-badge);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    min-height: 48px;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    background-color: var(--color-surface-light);
+    border: 3px solid var(--color-purple);
+    border-right-color: var(--color-border);
+    border-bottom-color: var(--color-border);
+    border-radius: var(--radius-badge);
 }
 
 .scorecard__badge .material-symbols-rounded {
-  font-size: 20px;
-  color: var(--color-text-primary);
+    font-size: 20px;
+    color: var(--color-text-primary);
 }
 
 .scorecard__badge-text {
-  font-size: 0.9375rem;
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text-primary);
-  line-height: 1;
+    font-size: 0.9375rem;
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    line-height: 1;
 }
 
 .scorecard__badge-caption {
-  font-size: 0.6875rem;
-  font-weight: var(--font-weight-semibold);
-  letter-spacing: 0.5px;
-  color: var(--color-text-secondary);
-  line-height: 1;
+    font-size: 0.6875rem;
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.5px;
+    color: var(--color-text-secondary);
+    line-height: 1;
 }
 
 /* Texto yatzy en amarillo con sombra de juego */
 .scorecard__badge--yatzy .scorecard__badge-text {
-  color: var(--color-yellow);
-  text-shadow: 2px 2px 0 var(--color-border);
-  font-size: var(--font-size-subtitle);
-  letter-spacing: 1px;
+    color: var(--color-yellow);
+    text-shadow: 2px 2px 0 var(--color-border);
+    font-size: var(--font-size-subtitle);
+    letter-spacing: 1px;
 }
 
 /* Badge del bonus: texto en morado */
 .scorecard__badge--bonus .scorecard__badge-text {
-  color: var(--color-purple);
+    color: var(--color-purple);
 }
 
 .scorecard__bonus-value {
-  font-size: var(--font-size-caption);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-purple);
-  line-height: 1;
+    font-size: var(--font-size-caption);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-purple);
+    line-height: 1;
 }
 
 /* Cara de dado pequeña dentro del badge */
 .scorecard__badge .die-face {
-  width: 34px;
-  height: 34px;
-  padding: 4px;
+    width: 34px;
+    height: 34px;
+    padding: 4px;
 }
 
 /* Pantallas estrechas: celdas y separaciones más compactas para que los
    badges de etiqueta sigan teniendo espacio sin recortar su contenido */
 @media (max-width: 380px) {
-  :root {
-    --cell-size: 40px;
-    --badge-size: 56px;
-  }
+    :root {
+        --cell-size: 40px;
+        --badge-size: 56px;
+    }
 
-  .scorecard__row {
-    column-gap: 6px;
-    gap: 6px;
-    padding-left: 8px;
-    padding-right: 8px;
-  }
+    .scorecard__row {
+        column-gap: 6px;
+        gap: 6px;
+        padding-left: 8px;
+        padding-right: 8px;
+    }
 
-  .scorecard__half {
-    gap: 6px;
-  }
+    .scorecard__half {
+        gap: 6px;
+    }
 }

@@ -1,32 +1,32 @@
 .scorecard-cell {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: var(--cell-size);
-  height: var(--cell-size);
-  border: 3px solid var(--color-border);
-  border-radius: var(--radius-cell);
-  font-size: var(--font-size-subtitle);
-  font-weight: var(--font-weight-bold);
-  font-variant-numeric: tabular-nums;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--cell-size);
+    height: var(--cell-size);
+    border: 3px solid var(--color-border);
+    border-radius: var(--radius-cell);
+    font-size: var(--font-size-subtitle);
+    font-weight: var(--font-weight-bold);
+    font-variant-numeric: tabular-nums;
 }
 
 .scorecard-cell--p1 {
-  background-color: var(--color-cell-p1);
-  border-color: var(--color-cell-p1-border);
+    background-color: var(--color-cell-p1);
+    border-color: var(--color-cell-p1-border);
 }
 
 .scorecard-cell--p2 {
-  background-color: var(--color-cell-p2);
-  border-color: var(--color-cell-p2-border);
+    background-color: var(--color-cell-p2);
+    border-color: var(--color-cell-p2-border);
 }
 
 .scorecard-cell--selectable {
-  padding: 0;
-  color: var(--color-border);
-  transition: transform 100ms ease;
+    padding: 0;
+    color: var(--color-border);
+    transition: transform 100ms ease;
 }
 
 .scorecard-cell--selectable:hover {
-  transform: scale(1.06);
+    transform: scale(1.06);
 }

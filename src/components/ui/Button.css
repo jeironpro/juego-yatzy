@@ -1,53 +1,53 @@
 .button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--spacing-sm);
-  min-height: 44px;
-  padding: var(--spacing-sm) var(--spacing-xl);
-  border: var(--border-thin);
-  border-radius: var(--radius-pill);
-  font-weight: var(--font-weight-bold);
-  transition:
-    background-color 150ms ease,
-    border-color 150ms ease,
-    color 150ms ease,
-    transform 100ms ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    min-height: 44px;
+    padding: var(--spacing-sm) var(--spacing-xl);
+    border: var(--border-thin);
+    border-radius: var(--radius-pill);
+    font-weight: var(--font-weight-bold);
+    transition:
+        background-color 150ms ease,
+        border-color 150ms ease,
+        color 150ms ease,
+        transform 100ms ease;
 }
 
 .button:active:not(:disabled) {
-  transform: scale(0.96);
+    transform: scale(0.96);
 }
 
 .button:disabled {
-  opacity: 0.5;
+    opacity: 0.5;
 }
 
 .button--primary {
-  background-color: var(--color-bar);
-  color: var(--color-text-on-dark);
+    background-color: var(--color-bar);
+    color: var(--color-text-on-dark);
 }
 
 .button--primary:hover:not(:disabled) {
-  background-color: var(--color-cell-p1-border);
+    background-color: var(--color-cell-p1-border);
 }
 
 .button--secondary {
-  background-color: var(--color-surface-light);
-  color: var(--color-text-primary);
+    background-color: var(--color-surface-light);
+    color: var(--color-text-primary);
 }
 
 .button--secondary:hover:not(:disabled) {
-  background-color: var(--color-surface-alt);
+    background-color: var(--color-surface-alt);
 }
 
 .button--ghost {
-  background-color: transparent;
-  border-color: transparent;
-  color: var(--color-text-secondary);
+    background-color: transparent;
+    border-color: transparent;
+    color: var(--color-text-secondary);
 }
 
 .button--ghost:hover:not(:disabled) {
-  color: var(--color-text-primary);
-  background-color: var(--color-surface-alt);
+    color: var(--color-text-primary);
+    background-color: var(--color-surface-alt);
 }

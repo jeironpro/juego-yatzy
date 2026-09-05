@@ -1,26 +1,26 @@
 .bonus-circle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: var(--cell-size);
-  height: var(--cell-size);
-  background-color: var(--color-surface-light);
-  border: 3px solid var(--color-border);
-  border-radius: var(--radius-pill);
-  font-size: 0.625rem;
-  font-weight: var(--font-weight-bold);
-  font-variant-numeric: tabular-nums;
-  color: var(--color-text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--cell-size);
+    height: var(--cell-size);
+    background-color: var(--color-surface-light);
+    border: 3px solid var(--color-border);
+    border-radius: var(--radius-pill);
+    font-size: 0.625rem;
+    font-weight: var(--font-weight-bold);
+    font-variant-numeric: tabular-nums;
+    color: var(--color-text-primary);
 }
 
 .bonus-circle--p1 {
-  border-color: var(--color-cell-p1-border);
+    border-color: var(--color-cell-p1-border);
 }
 
 .bonus-circle--p2 {
-  border-color: var(--color-cell-p2-border);
+    border-color: var(--color-cell-p2-border);
 }
 
 .bonus-circle--achieved {
-  background-color: var(--color-yellow);
+    background-color: var(--color-yellow);
 }
