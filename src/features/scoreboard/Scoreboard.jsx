@@ -1,8 +1,8 @@
 import { PLAYER_1, PLAYER_2 } from '@/features/game/constants.js';
 import './Scoreboard.css';
 
-// Marcador superior: nombres de los jugadores y contadores de puntos con "vs" al
-// centro; el jugador en turno queda resaltado
+// Marcador superior: nombres de los jugadores y contadores con "vs" al centro;
+// el jugador en turno queda resaltado con su color (naranja/turquesa)
 function Scoreboard({ player1Name, player2Name, player1Score, player2Score, badge = null, turn }) {
   const player1Active = turn === PLAYER_1;
   const player2Active = turn === PLAYER_2;

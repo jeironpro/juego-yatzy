@@ -1,13 +1,16 @@
+import { PLAYER_1 } from '@/features/game/constants.js';
 import './ScorecardCell.css';
 
-// Celda de puntuación del tablero: muestra el valor rellenado, el valor que
-// se obtendría con la tirada actual o un 0 atenuado si aún no hay tirada.
-// Cuando es seleccionable actúa como botón para anotar la categoría
-function ScorecardCell({ value, selectable = false, onClick = null, muted = false }) {
+// Celda cuadrada de puntuación del tablero: naranja para el jugador 1 y
+// turquesa para el jugador 2. Se muestra vacía (sin número) hasta que se
+// anota, enseña el valor prospectivo durante el turno y actúa como botón
+// cuando es seleccionable
+function ScorecardCell({ player, value = null, selectable = false, onClick = null }) {
+  const variant = player === PLAYER_1 ? 'p1' : 'p2';
   const className = [
     'scorecard-cell',
+    `scorecard-cell--${variant}`,
     selectable ? 'scorecard-cell--selectable' : '',
-    muted ? 'scorecard-cell--muted' : '',
   ]
     .filter(Boolean)
     .join(' ');

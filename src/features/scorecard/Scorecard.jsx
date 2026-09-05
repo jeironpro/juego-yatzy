@@ -19,30 +19,37 @@ import BonusCircle from './BonusCircle.jsx';
 import ScorecardCell from './ScorecardCell.jsx';
 import './Scorecard.css';
 
-// Filas de la sección inferior: etiqueta, icono opcional y texto bajo el icono
-const LOWER_ROWS = [
-  { id: CATEGORY_THREE_OF_A_KIND, label: '3x' },
-  { id: CATEGORY_FOUR_OF_A_KIND, label: '4x' },
+// Filas de la columna izquierda: dados del 1 al 6 (caras dibujadas) y bonus
+const LEFT_ROWS = UPPER_CATEGORIES.map((category, index) => ({
+  id: category,
+  die: index + 1,
+}));
+
+// Filas de la columna derecha: combinaciones de la sección inferior
+const RIGHT_ROWS = [
+  { id: CATEGORY_THREE_OF_A_KIND, label: '3X' },
+  { id: CATEGORY_FOUR_OF_A_KIND, label: '4X' },
   { id: CATEGORY_FULL_HOUSE, icon: 'cottage' },
   { id: CATEGORY_SMALL_STRAIGHT, icon: 'style', caption: 'SMALL' },
   { id: CATEGORY_LARGE_STRAIGHT, icon: 'view_carousel', caption: 'LARGE' },
-  { id: CATEGORY_YATZY, label: 'YATZY' },
+  { id: CATEGORY_YATZY, label: 'YATZY', yatzy: true },
   { id: CATEGORY_CHANCE, icon: 'help' },
 ];
 
-// Etiqueta de una fila: cara de dado, texto o icono (con texto bajo el icono)
-function RowLabel({ label = null, icon = null, caption = null }) {
+// Badge cuadrado de etiqueta: fondo blanco y borde morado en la esquina superior
+function RowBadge({ die = null, label = null, icon = null, caption = null, yatzy = false }) {
   return (
-    <div className="scorecard__label">
-      {label !== null && <span className="scorecard__label-text">{label}</span>}
+    <div className={`scorecard__badge${yatzy ? ' scorecard__badge--yatzy' : ''}`}>
+      {die !== null && <DieFace value={die} />}
+      {label !== null && <span className="scorecard__badge-text">{label}</span>}
       {icon !== null && <Icon name={icon} />}
-      {caption !== null && <span className="scorecard__label-caption">{caption}</span>}
+      {caption !== null && <span className="scorecard__badge-caption">{caption}</span>}
     </div>
   );
 }
 
-// Construye el contenido de la celda de un jugador para una categoría:
-// valor rellenado, valor que se obtendría con la tirada actual o 0 atenuado
+// Construye el contenido de la celda de un jugador: valor anotado, valor que se
+// obtendría con la tirada actual o vacío
 function buildCellProps(game, category, player, interactable) {
   const score = game.scores[player][category];
   if (score !== null) {
@@ -51,13 +58,9 @@ function buildCellProps(game, category, player, interactable) {
   const isTurnPlayer = player === game.turn;
   const hasDice = game.dice.length > 0;
   if (isTurnPlayer && hasDice) {
-    return {
-      value: scoreCategory(game.dice, category),
-      selectable: interactable,
-      muted: !interactable,
-    };
+    return { value: scoreCategory(game.dice, category), selectable: interactable };
   }
-  return { value: 0, muted: true };
+  return { value: null, selectable: false };
 }
 
 // Celda de puntuación de un jugador para una categoría
@@ -66,93 +69,120 @@ function PlayerCell({ game, category, player, interactable, onSelectCategory }) 
   const onClick = props.selectable ? () => onSelectCategory(category) : null;
   return (
     <ScorecardCell
+      player={player}
       value={props.value}
       selectable={props.selectable}
-      muted={props.muted}
       onClick={onClick}
     />
   );
 }
 
-// Tablero de puntuaciones: sección superior (dados 1-6 y bonus), línea divisora
-// y sección inferior (combinaciones). Cada fila conecta etiqueta + jugador 1 + jugador 2
+// Fila especial del bonus: etiqueta en morado y círculos de progreso 0/63
+// en lugar de las celdas normales de la mitad izquierda
+function BonusRow({ game, interactable, onSelectCategory }) {
+  return (
+    <div className="scorecard__row">
+      <div className="scorecard__half">
+        <div className="scorecard__badge scorecard__badge--bonus">
+          <span className="scorecard__badge-text">BONUS</span>
+          <span className="scorecard__bonus-value">+{BONUS_SCORE}</span>
+        </div>
+        <BonusCircle
+          player={PLAYER_1}
+          upperSum={computeUpperSum(game.scores[PLAYER_1])}
+          threshold={BONUS_THRESHOLD}
+        />
+        <BonusCircle
+          player={PLAYER_2}
+          upperSum={computeUpperSum(game.scores[PLAYER_2])}
+          threshold={BONUS_THRESHOLD}
+        />
+      </div>
+      <div className="scorecard__half">
+        <RowBadge icon="help" />
+        <PlayerCell
+          game={game}
+          category={CATEGORY_CHANCE}
+          player={PLAYER_1}
+          interactable={interactable}
+          onSelectCategory={onSelectCategory}
+        />
+        <PlayerCell
+          game={game}
+          category={CATEGORY_CHANCE}
+          player={PLAYER_2}
+          interactable={interactable}
+          onSelectCategory={onSelectCategory}
+        />
+      </div>
+    </div>
+  );
+}
+
+// Tablero de puntuaciones estilo juego de mesa: 7 filas con franjas alternas,
+// cada una con mitad izquierda (sección superior) y derecha (combinaciones)
+// separadas por una línea vertical central
 function Scorecard({ game, interactable = false, onSelectCategory }) {
   return (
     <section className="scorecard" aria-label="Tablero de puntuaciones">
-      <div className="scorecard__grid scorecard__grid--upper">
-        {UPPER_CATEGORIES.map((category, index) => (
-          <div className="scorecard__row" key={category}>
-            <div className="scorecard__label-cell">
-              <RowLabel
-                label={
-                  <span className="scorecard__die">
-                    <DieFace value={index + 1} />
-                  </span>
-                }
-              />
+      <div className="scorecard__rows">
+        {LEFT_ROWS.map((left, index) => {
+          const right = RIGHT_ROWS[index];
+          return (
+            <div className="scorecard__row" key={left.id}>
+              <div className="scorecard__half">
+                <RowBadge die={left.die} />
+                <PlayerCell
+                  game={game}
+                  category={left.id}
+                  player={PLAYER_1}
+                  interactable={interactable}
+                  onSelectCategory={onSelectCategory}
+                />
+                <PlayerCell
+                  game={game}
+                  category={left.id}
+                  player={PLAYER_2}
+                  interactable={interactable}
+                  onSelectCategory={onSelectCategory}
+                />
+              </div>
+              <div className="scorecard__half">
+                <RowBadge
+                  label={right.label}
+                  icon={right.icon}
+                  caption={right.caption}
+                  yatzy={right.yatzy}
+                />
+                <PlayerCell
+                  game={game}
+                  category={right.id}
+                  player={PLAYER_1}
+                  interactable={interactable}
+                  onSelectCategory={onSelectCategory}
+                />
+                <PlayerCell
+                  game={game}
+                  category={right.id}
+                  player={PLAYER_2}
+                  interactable={interactable}
+                  onSelectCategory={onSelectCategory}
+                />
+              </div>
             </div>
-            <PlayerCell
-              game={game}
-              category={category}
-              player={PLAYER_1}
-              interactable={interactable}
-              onSelectCategory={onSelectCategory}
-            />
-            <PlayerCell
-              game={game}
-              category={category}
-              player={PLAYER_2}
-              interactable={interactable}
-              onSelectCategory={onSelectCategory}
-            />
-          </div>
-        ))}
-        <div className="scorecard__row">
-          <div className="scorecard__label-cell">
-            <div className="scorecard__bonus-label">
-              <span>BONUS</span>
-              <span className="scorecard__bonus-value">+{BONUS_SCORE}</span>
-            </div>
-          </div>
-          <div className="scorecard__bonus-cell">
-            <BonusCircle
-              upperSum={computeUpperSum(game.scores[PLAYER_1])}
-              threshold={BONUS_THRESHOLD}
-            />
-          </div>
-          <div className="scorecard__bonus-cell">
-            <BonusCircle
-              upperSum={computeUpperSum(game.scores[PLAYER_2])}
-              threshold={BONUS_THRESHOLD}
-            />
-          </div>
-        </div>
+          );
+        })}
+        <BonusRow game={game} interactable={interactable} onSelectCategory={onSelectCategory} />
       </div>
 
-      <div className="scorecard__divider" role="separator" />
-
-      <div className="scorecard__grid scorecard__grid--lower">
-        {LOWER_ROWS.map((row) => (
-          <div className="scorecard__row" key={row.id}>
-            <div className="scorecard__label-cell">
-              <RowLabel label={row.label} icon={row.icon} caption={row.caption} />
-            </div>
-            <PlayerCell
-              game={game}
-              category={row.id}
-              player={PLAYER_1}
-              interactable={interactable}
-              onSelectCategory={onSelectCategory}
-            />
-            <PlayerCell
-              game={game}
-              category={row.id}
-              player="player2"
-              interactable={interactable}
-              onSelectCategory={onSelectCategory}
-            />
-          </div>
-        ))}
+      {/* Líneas guía verticales: conectan las celdas naranjas y turquesas de
+          cada columna atravesando las filas, y marcan el divisor central */}
+      <div className="scorecard__guides" aria-hidden="true">
+        <span className="scorecard__guides-line scorecard__guides-line--1" />
+        <span className="scorecard__guides-line scorecard__guides-line--2" />
+        <span className="scorecard__guides-line scorecard__guides-line--3" />
+        <span className="scorecard__guides-line scorecard__guides-line--4" />
+        <span className="scorecard__guides-divider" />
       </div>
     </section>
   );

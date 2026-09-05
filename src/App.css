@@ -1,4 +1,11 @@
 .app {
   display: flex;
+  justify-content: center;
   min-height: 100vh;
+  background-color: var(--color-bg);
+}
+
+.app > * {
+  width: 100%;
+  max-width: 560px;
 }

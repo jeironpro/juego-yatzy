@@ -1,103 +1,154 @@
 .scorecard {
   width: 100%;
-  max-width: 560px;
+  max-width: 520px;
   margin: 0 auto;
   padding: var(--spacing-md);
   background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-md);
+  border: var(--border-thick);
+  border-radius: var(--radius-card);
 }
 
-/* Grilla conectada: las celdas comparten líneas de 1px (celdas unidas al centro) */
-.scorecard__grid {
-  display: grid;
-  grid-template-columns: 1.3fr 1fr 1fr;
-  gap: 1px;
-  overflow: hidden;
-  background-color: var(--color-border-strong);
-  border-radius: var(--radius-lg);
+/* Contenedor relativo para las líneas guía superpuestas */
+.scorecard__rows {
+  position: relative;
 }
 
+/* Cada fila es una grilla de 7 columnas compartidas por ambas mitades:
+   badge izquierdo, celdas naranja y turquesa, divisor central, badge
+   derecho y de nuevo las dos celdas */
 .scorecard__row {
-  display: contents;
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr) var(--cell-size) var(--cell-size) 2px
+    minmax(0, 1fr) var(--cell-size) var(--cell-size);
+  column-gap: 10px;
+  align-items: center;
+  padding: 10px 12px;
+  background-color: var(--color-surface);
 }
 
-.scorecard__label-cell {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 44px;
-  padding: var(--spacing-xs) var(--spacing-sm);
+/* Franjas de fondo alternas crema / beige */
+.scorecard__row:nth-child(even) {
   background-color: var(--color-surface-alt);
 }
 
-.scorecard__label {
+/* Las mitades no generan caja: sus hijos se colocan en la grilla de la fila */
+.scorecard__half {
+  display: contents;
+}
+
+/* Badge cuadrado de etiqueta: fondo blanco y borde morado en la esquina superior */
+.scorecard__badge {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 2px;
+  min-height: 48px;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background-color: var(--color-surface-light);
+  border: 3px solid var(--color-purple);
+  border-right-color: var(--color-border);
+  border-bottom-color: var(--color-border);
+  border-radius: var(--radius-badge);
+}
+
+.scorecard__badge .material-symbols-rounded {
+  font-size: 20px;
   color: var(--color-text-primary);
 }
 
-.scorecard__label .material-symbols-rounded {
-  font-size: 22px;
-}
-
-.scorecard__label-text {
-  font-size: var(--font-size-label);
+.scorecard__badge-text {
+  font-size: 0.9375rem;
   font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  line-height: 1;
 }
 
-.scorecard__label-caption {
-  font-size: 0.625rem;
+.scorecard__badge-caption {
+  font-size: 0.6875rem;
   font-weight: var(--font-weight-semibold);
   letter-spacing: 0.5px;
   color: var(--color-text-secondary);
+  line-height: 1;
 }
 
-.scorecard__die {
-  display: block;
-  width: 22px;
-  height: 22px;
+/* Texto yatzy en amarillo con sombra de juego */
+.scorecard__badge--yatzy .scorecard__badge-text {
+  color: var(--color-yellow);
+  text-shadow: 2px 2px 0 var(--color-border);
+  font-size: var(--font-size-subtitle);
+  letter-spacing: 1px;
 }
 
-.scorecard__bonus-label {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0;
-  font-size: var(--font-size-label);
-  font-weight: var(--font-weight-bold);
+/* Badge del bonus: texto en morado */
+.scorecard__badge--bonus {
+  border-color: var(--color-purple);
+  border-right-color: var(--color-border);
+  border-bottom-color: var(--color-border);
+}
+
+.scorecard__badge--bonus .scorecard__badge-text {
+  color: var(--color-purple);
 }
 
 .scorecard__bonus-value {
   font-size: var(--font-size-caption);
-  color: var(--color-success);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-purple);
+  line-height: 1;
 }
 
-.scorecard__bonus-cell {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--color-surface);
+/* Cara de dado pequeña dentro del badge */
+.scorecard__badge .die-face {
+  width: 26px;
+  height: 26px;
+  padding: 14%;
 }
 
-/* Línea divisora entre la sección superior y la inferior */
-.scorecard__divider {
-  height: 3px;
-  margin: var(--spacing-sm) 0;
-  background-color: var(--color-primary);
-  border-radius: var(--radius-full);
+/* Líneas guía superpuestas: mismas columnas que las filas */
+.scorecard__guides {
+  position: absolute;
+  inset: 0;
+  padding: 0 12px;
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr) var(--cell-size) var(--cell-size) 2px
+    minmax(0, 1fr) var(--cell-size) var(--cell-size);
+  column-gap: 10px;
+  pointer-events: none;
+  z-index: 2;
 }
 
-@media (min-width: 640px) {
-  .scorecard {
-    max-width: 620px;
-  }
+/* Línea fina discontinua que atraviesa cada columna de celdas */
+.scorecard__guides-line {
+  justify-self: center;
+  width: 0;
+  height: 100%;
+  border-left: 2px dashed rgb(43 43 43 / 0.35);
+}
 
-  .scorecard__label-cell,
-  .scorecard-cell {
-    min-height: 52px;
-  }
+.scorecard__guides-line--1 {
+  grid-column: 2;
+}
+
+.scorecard__guides-line--2 {
+  grid-column: 3;
+}
+
+.scorecard__guides-line--3 {
+  grid-column: 6;
+}
+
+.scorecard__guides-line--4 {
+  grid-column: 7;
+}
+
+/* Divisor central sólido entre las dos mitades */
+.scorecard__guides-divider {
+  grid-column: 4;
+  justify-self: center;
+  width: 2px;
+  height: 100%;
+  background-color: var(--color-border);
 }

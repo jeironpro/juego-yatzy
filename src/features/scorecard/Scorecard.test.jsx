@@ -15,8 +15,8 @@ describe('Scorecard', () => {
     render(<Scorecard game={createGame()} interactable={false} onSelectCategory={() => {}} />);
     expect(screen.getByText('BONUS')).toBeInTheDocument();
     expect(screen.getByText('+35')).toBeInTheDocument();
-    expect(screen.getByText('3x')).toBeInTheDocument();
-    expect(screen.getByText('4x')).toBeInTheDocument();
+    expect(screen.getByText('3X')).toBeInTheDocument();
+    expect(screen.getByText('4X')).toBeInTheDocument();
     expect(screen.getByText('SMALL')).toBeInTheDocument();
     expect(screen.getByText('LARGE')).toBeInTheDocument();
     expect(screen.getByText('YATZY')).toBeInTheDocument();
@@ -39,7 +39,8 @@ describe('Scorecard', () => {
     const onSelectCategory = vi.fn();
     const game = gameWithDice();
     render(<Scorecard game={game} interactable onSelectCategory={onSelectCategory} />);
-    await user.click(screen.getAllByText('30')[0]);
+    // la celda de sixes del jugador 1 es la tercera de las prospectivas de 30
+    await user.click(screen.getAllByRole('button', { name: 'Anotar 30' })[2]);
     expect(onSelectCategory).toHaveBeenCalledWith(CATEGORY_SIXES);
   });
 
@@ -68,5 +69,11 @@ describe('Scorecard', () => {
     expect(screen.getAllByRole('button', { name: 'Anotar 30' })).toHaveLength(4);
     // el jugador 2 (fuera de turno) no muestra ningún 30 prospectivo
     expect(screen.getAllByText('30')).toHaveLength(4);
+  });
+
+  it('deja las celdas vacías (sin números) hasta anotar', () => {
+    render(<Scorecard game={createGame()} interactable={false} onSelectCategory={() => {}} />);
+    // sin tirada ni puntuaciones, no aparece ningún número en las celdas
+    expect(screen.queryByText('0')).not.toBeInTheDocument();
   });
 });
