@@ -19,7 +19,7 @@ import {
   isGameOver,
   rollDiceInGame,
   selectCategory,
-  toggleReroll,
+  toggleHold,
 } from './game.js';
 import { YATZY_SCORE } from './constants.js';
 
@@ -29,7 +29,7 @@ describe('createGame', () => {
     expect(game.turn).toBe(PLAYER_1);
     expect(game.rollNumber).toBe(0);
     expect(game.dice).toEqual([]);
-    expect(game.reroll).toEqual([false, false, false, false, false]);
+    expect(game.held).toEqual([false, false, false, false, false]);
     expect(getAvailableCategories(game, PLAYER_1)).toHaveLength(ALL_CATEGORIES.length);
     expect(isGameOver(game)).toBe(false);
   });
@@ -42,15 +42,15 @@ describe('rollDiceInGame', () => {
     expect(game.rollNumber).toBe(1);
   });
 
-  it('relanza solo los dados marcados en tiradas siguientes', () => {
+  it('conserva los dados marcados y relanza el resto en tiradas siguientes', () => {
     let game = rollDiceInGame(createGame(), () => 0.5);
-    game = toggleReroll(game, 0);
-    const keptValue = game.dice[1];
+    game = toggleHold(game, 0);
+    const keptValue = game.dice[0];
     game = rollDiceInGame(game, () => 0.99);
-    expect(game.dice[0]).toBe(6);
-    expect(game.dice[1]).toBe(keptValue);
+    expect(game.dice[0]).toBe(keptValue);
+    expect(game.dice[1]).toBe(6);
     expect(game.rollNumber).toBe(2);
-    expect(game.reroll).toEqual([false, false, false, false, false]);
+    expect(game.held).toEqual([false, false, false, false, false]);
   });
 
   it('relanza los cinco dados si no hay marcas', () => {
@@ -65,7 +65,7 @@ describe('rollDiceInGame', () => {
     for (let i = 0; i < MAX_ROLLS; i += 1) {
       game = rollDiceInGame(game, () => 0.5);
       if (i < MAX_ROLLS - 1) {
-        game = toggleReroll(game, 0);
+        game = toggleHold(game, 0);
       }
     }
     const after = rollDiceInGame(game, () => 0.5);
@@ -75,20 +75,20 @@ describe('rollDiceInGame', () => {
   });
 });
 
-describe('toggleReroll', () => {
-  it('alterna la marca de relanzamiento de un dado', () => {
+describe('toggleHold', () => {
+  it('alterna la marca de conservación de un dado', () => {
     let game = rollDiceInGame(createGame(), () => 0.5);
-    game = toggleReroll(game, 2);
-    expect(game.reroll[2]).toBe(true);
-    game = toggleReroll(game, 2);
-    expect(game.reroll[2]).toBe(false);
+    game = toggleHold(game, 2);
+    expect(game.held[2]).toBe(true);
+    game = toggleHold(game, 2);
+    expect(game.held[2]).toBe(false);
   });
 
   it('ignora índices fuera de rango o sin dados lanzados', () => {
     const empty = createGame();
-    expect(toggleReroll(empty, 0)).toBe(empty);
+    expect(toggleHold(empty, 0)).toBe(empty);
     const game = rollDiceInGame(createGame(), () => 0.5);
-    expect(toggleReroll(game, 99).reroll).toEqual(game.reroll);
+    expect(toggleHold(game, 99).held).toEqual(game.held);
   });
 });
 

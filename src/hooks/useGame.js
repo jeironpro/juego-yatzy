@@ -6,7 +6,7 @@ import {
   isGameOver,
   rollDiceInGame,
   selectCategory,
-  toggleReroll,
+  toggleHold,
 } from '@/features/game/game.js';
 import { computeUpperSum } from '@/features/game/scoring.js';
 import { chooseCategory, chooseDiceToKeep } from '@/features/bot/bot.js';
@@ -25,7 +25,7 @@ function botStep(game, difficulty) {
   }
 
   if (game.rollNumber < MAX_ROLLS) {
-    // decide qué dados conservar y marca el resto para relanzarlo
+    // decide qué dados conservar y los marca para mantenerlos en la tirada
     const keep = chooseDiceToKeep(game.dice, availableCategories, upperSum, difficulty);
     if (keep.length === game.dice.length) {
       // conserva todos los dados: no hay nada que relanzar, anota directamente
@@ -34,8 +34,8 @@ function botStep(game, difficulty) {
     }
     let next = game;
     for (let index = 0; index < game.dice.length; index += 1) {
-      if (!keep.includes(index)) {
-        next = toggleReroll(next, index);
+      if (keep.includes(index)) {
+        next = toggleHold(next, index);
       }
     }
     return rollDiceInGame(next);
@@ -72,8 +72,8 @@ export function useGame({ botDifficulty = null } = {}) {
     setGame((current) => rollDiceInGame(current, random));
   }, []);
 
-  const toggleRerollMark = useCallback((index) => {
-    setGame((current) => toggleReroll(current, index));
+  const toggleHoldMark = useCallback((index) => {
+    setGame((current) => toggleHold(current, index));
   }, []);
 
   const score = useCallback((category) => {
@@ -84,5 +84,5 @@ export function useGame({ botDifficulty = null } = {}) {
     setGame(createGame());
   }, []);
 
-  return { game, roll, toggleRerollMark, score, restart };
+  return { game, roll, toggleHoldMark, score, restart };
 }

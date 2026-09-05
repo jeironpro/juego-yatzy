@@ -109,52 +109,6 @@
   padding: 4px;
 }
 
-/* Líneas guía superpuestas: replican la estructura flex de las filas
-   (mitad + divisor + mitad) para que las líneas atraviesen las celdas */
-.scorecard__guides {
-  position: absolute;
-  inset: 0;
-  padding: 0 12px;
-  display: flex;
-  align-items: stretch;
-  gap: 10px;
-  pointer-events: none;
-  z-index: 2;
-}
-
-.scorecard__guides-half {
-  flex: 1;
-  min-width: 0;
-  display: grid;
-  grid-template-columns: var(--badge-size) var(--cell-size) var(--cell-size);
-  justify-content: center;
-  gap: 10px;
-}
-
-/* Línea fina discontinua que atraviesa cada columna de celdas */
-.scorecard__guides-line {
-  justify-self: center;
-  width: 0;
-  height: 100%;
-  border-left: 2px dashed rgb(43 43 43 / 0.35);
-}
-
-.scorecard__guides-line--1,
-.scorecard__guides-line--3 {
-  grid-column: 2;
-}
-
-.scorecard__guides-line--2,
-.scorecard__guides-line--4 {
-  grid-column: 3;
-}
-
-/* Divisor central sólido de la superposición (cubre el alto completo) */
-.scorecard__guides-divider {
-  width: 2px;
-  background-color: var(--color-border);
-}
-
 /* Pantallas estrechas: celdas y separaciones más compactas para que los
    badges de etiqueta sigan teniendo espacio sin recortar su contenido */
 @media (max-width: 380px) {
@@ -163,16 +117,14 @@
     --badge-size: 56px;
   }
 
-  .scorecard__row,
-  .scorecard__guides {
+  .scorecard__row {
     column-gap: 6px;
     gap: 6px;
     padding-left: 8px;
     padding-right: 8px;
   }
 
-  .scorecard__half,
-  .scorecard__guides-half {
+  .scorecard__half {
     gap: 6px;
   }
 }

@@ -1,7 +1,7 @@
 import Button from '@/components/ui/Button.jsx';
 import Scoreboard from '@/features/scoreboard/Scoreboard.jsx';
 import Scorecard from '@/features/scorecard/Scorecard.jsx';
-import RerollRow from '@/features/dice/RerollRow.jsx';
+import HoldRow from '@/features/dice/HoldRow.jsx';
 import RollBar from '@/features/dice/RollBar.jsx';
 import GameOverScreen from '@/features/menu/GameOverScreen.jsx';
 import { MAX_ROLLS, PLAYER_1, PLAYER_2 } from '@/features/game/constants.js';
@@ -9,12 +9,12 @@ import { canRoll, getPlayerTotal, getWinner, isGameOver } from '@/features/game/
 import './GameScreen.css';
 
 // Pantalla de partida: marcador arriba, tablero al centro y, debajo, las
-// estrellas de reroll con la barra GIRA. Con botMode activo, el tablero se
+// estrellas de conservación con la barra GIRA. Con botMode activo, el tablero se
 // bloquea mientras juega el bot
 function GameScreen({
   game,
   onRoll,
-  onToggleReroll,
+  onToggleHold,
   onScore,
   onRestart,
   onMenu,
@@ -28,9 +28,9 @@ function GameScreen({
   const humanPlaying = botMode ? game.turn === PLAYER_1 : true;
   const botThinking = botMode && game.turn === PLAYER_2 && !gameOver;
 
-  const hasMarks = game.reroll.some(Boolean);
+  const hasHeld = game.held.some(Boolean);
   const rollDisabled = gameOver || !humanPlaying || !canRoll(game);
-  const marksDisabled =
+  const holdDisabled =
     gameOver || !humanPlaying || game.dice.length === 0 || game.rollNumber >= MAX_ROLLS;
   const interactable = humanPlaying && game.dice.length > 0 && !gameOver;
 
@@ -41,8 +41,8 @@ function GameScreen({
       ? 'Pulsa GIRA para lanzar los dados'
       : game.rollNumber >= MAX_ROLLS
         ? 'Elige una categoría para anotar'
-        : hasMarks
-          ? 'Pulsa GIRA para relanzar las estrellas'
+        : hasHeld
+          ? 'Pulsa GIRA para relanzar los dados sin estrella'
           : 'Pulsa GIRA para relanzar todos los dados';
 
   // Título del fin de partida según el modo y el ganador
@@ -72,11 +72,11 @@ function GameScreen({
         <p className="game-screen__status" role="status">
           {status}
         </p>
-        <RerollRow
+        <HoldRow
           dice={game.dice}
-          marks={game.reroll}
-          onToggleMark={humanPlaying ? onToggleReroll : null}
-          disabled={marksDisabled}
+          held={game.held}
+          onToggleHold={humanPlaying ? onToggleHold : null}
+          disabled={holdDisabled}
         />
         <RollBar
           rollNumber={game.rollNumber}
