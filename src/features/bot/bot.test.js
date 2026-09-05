@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import {
   CATEGORY_CHANCE,
+  CATEGORY_FOUR_OF_A_KIND,
   CATEGORY_FULL_HOUSE,
   CATEGORY_THREE_OF_A_KIND,
   CATEGORY_LARGE_STRAIGHT,
@@ -107,6 +108,38 @@ describe('chooseDiceToKeep — valor esperado (difícil)', () => {
     const keep = chooseDiceToKeep(dice, [CATEGORY_THREE_OF_A_KIND, CATEGORY_CHANCE], 0, 'dificil');
     expect(keep).toEqual([0, 1, 2]);
   });
+
+  it('persigue la escalera grande conservando los cuatro consecutivos', () => {
+    const dice = [1, 2, 3, 4, 6];
+    const keep = chooseDiceToKeep(
+      dice,
+      [CATEGORY_LARGE_STRAIGHT, CATEGORY_SMALL_STRAIGHT, CATEGORY_CHANCE],
+      0,
+      'dificil',
+      1,
+    );
+    expect(keep).toEqual([0, 1, 2, 3]);
+  });
+
+  it('equilibra combinaciones y oportunidad con dos tiradas por delante', () => {
+    // conservar los dos seises maximiza el valor esperado: opción de trío alto,
+    // póker y oportunidad, frente a fijar el trío de treses
+    const dice = [3, 3, 3, 6, 6];
+    const keep = chooseDiceToKeep(
+      dice,
+      [CATEGORY_FOUR_OF_A_KIND, CATEGORY_THREE_OF_A_KIND, CATEGORY_CHANCE],
+      0,
+      'dificil',
+      1,
+    );
+    expect(keep).toEqual([3, 4]);
+  });
+
+  it('no rompe un full house ya conseguido', () => {
+    const dice = [3, 3, 3, 5, 5];
+    const keep = chooseDiceToKeep(dice, [CATEGORY_FULL_HOUSE, CATEGORY_CHANCE], 0, 'dificil', 1);
+    expect(keep).toEqual([0, 1, 2, 3, 4]);
+  });
 });
 
 describe('estrategia del bot en partidas simuladas', () => {
@@ -146,6 +179,39 @@ describe('estrategia del bot en partidas simuladas', () => {
     const category = chooseCategory(dice, [CATEGORY_YATZY, CATEGORY_CHANCE], 0, 'dificil');
     expect(category).toBe(CATEGORY_YATZY);
     expect(scoreFor(dice, category)).toBe(YATZY_SCORE);
+  });
+
+  it('descarta antes la categoría más difícil cuando todo puntúa cero', () => {
+    // 1,1,2,2,3 no forma ninguna combinación disponible
+    const dice = [1, 1, 2, 2, 3];
+    const category = chooseCategory(
+      dice,
+      [CATEGORY_SMALL_STRAIGHT, CATEGORY_FULL_HOUSE, CATEGORY_THREE_OF_A_KIND, CATEGORY_YATZY],
+      0,
+      'dificil',
+    );
+    expect(category).toBe(CATEGORY_YATZY);
+  });
+});
+
+describe('rendimiento de la búsqueda de valor esperado', () => {
+  it('decide en el nivel difícil con anticipación en pocos milisegundos', () => {
+    const dice = [3, 3, 3, 5, 2];
+    const categories = [
+      CATEGORY_YATZY,
+      CATEGORY_FOUR_OF_A_KIND,
+      CATEGORY_THREE_OF_A_KIND,
+      CATEGORY_LARGE_STRAIGHT,
+      CATEGORY_SMALL_STRAIGHT,
+      CATEGORY_CHANCE,
+    ];
+    const start = performance.now();
+    for (let i = 0; i < 10; i += 1) {
+      chooseDiceToKeep(dice, categories, 0, 'dificil', 1);
+    }
+    const elapsed = performance.now() - start;
+    // margen amplio para entornos lentos de CI; en desarrollo ronda los 20ms
+    expect(elapsed / 10).toBeLessThan(250);
   });
 });
 
