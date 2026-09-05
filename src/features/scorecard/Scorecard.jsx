@@ -77,6 +77,30 @@ function PlayerCell({ game, category, player, interactable, onSelectCategory }) 
   );
 }
 
+// Mitad de una fila: badge de etiqueta más las celdas naranja y turquesa.
+// Es una grilla propia de tres columnas (badge flexible + dos celdas fijas)
+function RowHalf({ badge, category, game, interactable, onSelectCategory }) {
+  return (
+    <div className="scorecard__half">
+      {badge}
+      <PlayerCell
+        game={game}
+        category={category}
+        player={PLAYER_1}
+        interactable={interactable}
+        onSelectCategory={onSelectCategory}
+      />
+      <PlayerCell
+        game={game}
+        category={category}
+        player={PLAYER_2}
+        interactable={interactable}
+        onSelectCategory={onSelectCategory}
+      />
+    </div>
+  );
+}
+
 // Fila especial del bonus: etiqueta en morado y círculos de progreso 0/63
 // en lugar de las celdas normales de la mitad izquierda
 function BonusRow({ game, interactable, onSelectCategory }) {
@@ -98,6 +122,7 @@ function BonusRow({ game, interactable, onSelectCategory }) {
           threshold={BONUS_THRESHOLD}
         />
       </div>
+      <span className="scorecard__row-divider" />
       <div className="scorecard__half">
         <RowBadge icon="help" />
         <PlayerCell
@@ -130,59 +155,48 @@ function Scorecard({ game, interactable = false, onSelectCategory }) {
           const right = RIGHT_ROWS[index];
           return (
             <div className="scorecard__row" key={left.id}>
-              <div className="scorecard__half">
-                <RowBadge die={left.die} />
-                <PlayerCell
-                  game={game}
-                  category={left.id}
-                  player={PLAYER_1}
-                  interactable={interactable}
-                  onSelectCategory={onSelectCategory}
-                />
-                <PlayerCell
-                  game={game}
-                  category={left.id}
-                  player={PLAYER_2}
-                  interactable={interactable}
-                  onSelectCategory={onSelectCategory}
-                />
-              </div>
-              <div className="scorecard__half">
-                <RowBadge
-                  label={right.label}
-                  icon={right.icon}
-                  caption={right.caption}
-                  yatzy={right.yatzy}
-                />
-                <PlayerCell
-                  game={game}
-                  category={right.id}
-                  player={PLAYER_1}
-                  interactable={interactable}
-                  onSelectCategory={onSelectCategory}
-                />
-                <PlayerCell
-                  game={game}
-                  category={right.id}
-                  player={PLAYER_2}
-                  interactable={interactable}
-                  onSelectCategory={onSelectCategory}
-                />
-              </div>
+              <RowHalf
+                badge={<RowBadge die={left.die} />}
+                category={left.id}
+                game={game}
+                interactable={interactable}
+                onSelectCategory={onSelectCategory}
+              />
+              <span className="scorecard__row-divider" />
+              <RowHalf
+                badge={
+                  <RowBadge
+                    label={right.label}
+                    icon={right.icon}
+                    caption={right.caption}
+                    yatzy={right.yatzy}
+                  />
+                }
+                category={right.id}
+                game={game}
+                interactable={interactable}
+                onSelectCategory={onSelectCategory}
+              />
             </div>
           );
         })}
         <BonusRow game={game} interactable={interactable} onSelectCategory={onSelectCategory} />
-      </div>
 
-      {/* Líneas guía verticales: conectan las celdas naranjas y turquesas de
-          cada columna atravesando las filas, y marcan el divisor central */}
-      <div className="scorecard__guides" aria-hidden="true">
-        <span className="scorecard__guides-line scorecard__guides-line--1" />
-        <span className="scorecard__guides-line scorecard__guides-line--2" />
-        <span className="scorecard__guides-line scorecard__guides-line--3" />
-        <span className="scorecard__guides-line scorecard__guides-line--4" />
-        <span className="scorecard__guides-divider" />
+        {/* Líneas guía verticales: conectan las celdas naranjas y turquesas de
+            cada columna atravesando las filas, y marcan el divisor central.
+            Viven dentro de scorecard__rows (position: relative) y replican la
+            misma estructura flex de las filas para alinearse con las celdas */}
+        <div className="scorecard__guides" aria-hidden="true">
+          <div className="scorecard__guides-half">
+            <span className="scorecard__guides-line scorecard__guides-line--1" />
+            <span className="scorecard__guides-line scorecard__guides-line--2" />
+          </div>
+          <span className="scorecard__guides-divider" />
+          <div className="scorecard__guides-half">
+            <span className="scorecard__guides-line scorecard__guides-line--3" />
+            <span className="scorecard__guides-line scorecard__guides-line--4" />
+          </div>
+        </div>
       </div>
     </section>
   );
