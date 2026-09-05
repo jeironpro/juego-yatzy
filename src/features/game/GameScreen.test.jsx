@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { CATEGORY_SIXES, PLAYER_2 } from '@/features/game/constants.js';
-import { createGame, rollDiceInGame, toggleReroll } from '@/features/game/game.js';
+import { createGame, rollDiceInGame, toggleHold } from '@/features/game/game.js';
 import GameScreen from './GameScreen.jsx';
 
 // Partida en el turno del jugador 1 con todos los dados en seis
@@ -11,7 +11,7 @@ const game = rollDiceInGame(createGame(), () => 0.99);
 const baseProps = {
   game,
   onRoll: () => {},
-  onToggleReroll: () => {},
+  onToggleHold: () => {},
   onScore: () => {},
   onRestart: () => {},
   onMenu: () => {},
@@ -45,19 +45,19 @@ describe('GameScreen', () => {
     expect(onScore).toHaveBeenCalledWith(CATEGORY_SIXES);
   });
 
-  it('marca y desmarca un dado para relanzarlo', async () => {
+  it('marca y desmarca un dado para conservarlo', async () => {
     const user = userEvent.setup();
-    const onToggleReroll = vi.fn();
-    render(<GameScreen {...baseProps} onToggleReroll={onToggleReroll} />);
+    const onToggleHold = vi.fn();
+    render(<GameScreen {...baseProps} onToggleHold={onToggleHold} />);
     await user.click(screen.getAllByRole('button', { name: 'Dado 6' })[0]);
-    expect(onToggleReroll).toHaveBeenCalledWith(0);
+    expect(onToggleHold).toHaveBeenCalledWith(0);
   });
 
   it('deshabilita GIRA cuando se agotan las tiradas', () => {
     let exhausted = rollDiceInGame(game, () => 0.99);
-    exhausted = toggleReroll(exhausted, 0);
+    exhausted = toggleHold(exhausted, 0);
     exhausted = rollDiceInGame(exhausted, () => 0.99);
-    exhausted = toggleReroll(exhausted, 0);
+    exhausted = toggleHold(exhausted, 0);
     exhausted = rollDiceInGame(exhausted, () => 0.99);
     render(<GameScreen {...baseProps} game={exhausted} />);
     expect(screen.getByText('Elige una categoría para anotar')).toBeInTheDocument();

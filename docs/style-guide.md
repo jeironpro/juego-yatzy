@@ -80,10 +80,11 @@ badge, celda p1, celda p2`. Las filas alternan franjas crema/beige y las mitades
 - Bordes de 2px oscuros y radio de píldora; primario rojo ladrillo con texto blanco,
   secundario blanco con texto oscuro.
 
-### Estrella de dado (reroll)
+### Estrella de dado (conservación)
 
 - Cuadrado gris oscuro (`--color-star`) con icono de estrella blanco y el valor del
-  dado debajo; marcada para relanzar pasa a fondo amarillo con contenido oscuro.
+  dado debajo; marcada para conservar el dado pasa a fondo amarillo con contenido
+  oscuro. Al pulsar GIRA se relanzan solo los dados sin estrella.
 
 ### Barra GIRA
 

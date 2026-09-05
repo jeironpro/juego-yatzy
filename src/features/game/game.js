@@ -1,5 +1,5 @@
 import { ALL_CATEGORIES, DICE_COUNT, MAX_ROLLS, PLAYER_1, PLAYER_2 } from './constants.js';
-import { rollDice, rerollSelected } from './dice.js';
+import { rollDice, rerollUnheld } from './dice.js';
 import { scoreCategory, computeTotalScore } from './scoring.js';
 
 // Crea las puntuaciones vacías de un jugador: todas las categorías sin rellenar
@@ -13,7 +13,7 @@ export function createGame() {
     turn: PLAYER_1,
     rollNumber: 0,
     dice: [],
-    reroll: Array(DICE_COUNT).fill(false),
+    held: Array(DICE_COUNT).fill(false),
     scores: {
       [PLAYER_1]: createEmptyScores(),
       [PLAYER_2]: createEmptyScores(),
@@ -54,31 +54,29 @@ export function canRoll(game) {
   return !isGameOver(game) && game.rollNumber < MAX_ROLLS;
 }
 
-// Lanza los dados del turno: si hay marcas relanza solo los dados marcados;
+// Lanza los dados del turno: conserva los dados marcados y relanza el resto;
 // si no hay ninguna marca se relanzan los cinco dados. Al lanzar se limpian
 // todas las marcas
 export function rollDiceInGame(game, random = Math.random) {
   if (game.rollNumber >= MAX_ROLLS) return game;
-  const hasMarks = game.reroll.some(Boolean);
-  const dice = hasMarks
-    ? rerollSelected(game.dice, game.reroll, random)
-    : rollDice(DICE_COUNT, random);
+  const hasHeld = game.held.some(Boolean);
+  const dice = hasHeld ? rerollUnheld(game.dice, game.held, random) : rollDice(DICE_COUNT, random);
   return {
     ...game,
     dice,
-    reroll: Array(DICE_COUNT).fill(false),
+    held: Array(DICE_COUNT).fill(false),
     rollNumber: game.rollNumber + 1,
   };
 }
 
-// Marca o desmarca un dado para relanzarlo en la siguiente tirada
+// Marca o desmarca un dado para conservarlo en la siguiente tirada
 // (solo durante la fase de lanzamiento)
-export function toggleReroll(game, index) {
+export function toggleHold(game, index) {
   if (game.dice.length === 0 || game.rollNumber >= MAX_ROLLS) return game;
   if (index < 0 || index >= DICE_COUNT) return game;
-  const reroll = [...game.reroll];
-  reroll[index] = !reroll[index];
-  return { ...game, reroll };
+  const held = [...game.held];
+  held[index] = !held[index];
+  return { ...game, held };
 }
 
 // Anota la tirada actual en la categoría elegida y pasa el turno
@@ -101,6 +99,6 @@ export function selectCategory(game, category, player = game.turn) {
     turn: nextTurn,
     rollNumber: 0,
     dice: [],
-    reroll: Array(DICE_COUNT).fill(false),
+    held: Array(DICE_COUNT).fill(false),
   };
 }

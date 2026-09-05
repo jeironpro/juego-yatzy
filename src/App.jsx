@@ -10,7 +10,7 @@ function App() {
   const [screen, setScreen] = useState('home');
   const [mode, setMode] = useState('local');
   const [difficulty, setDifficulty] = useState(DEFAULT_DIFFICULTY);
-  const { game, roll, toggleRerollMark, score, restart } = useGame({
+  const { game, roll, toggleHoldMark, score, restart } = useGame({
     botDifficulty: mode === 'bot' ? difficulty : null,
   });
 
@@ -35,7 +35,7 @@ function App() {
         <GameScreen
           game={game}
           onRoll={roll}
-          onToggleReroll={toggleRerollMark}
+          onToggleHold={toggleHoldMark}
           onScore={score}
           onRestart={restart}
           onMenu={goHome}

@@ -181,22 +181,6 @@ function Scorecard({ game, interactable = false, onSelectCategory }) {
           );
         })}
         <BonusRow game={game} interactable={interactable} onSelectCategory={onSelectCategory} />
-
-        {/* Líneas guía verticales: conectan las celdas naranjas y turquesas de
-            cada columna atravesando las filas, y marcan el divisor central.
-            Viven dentro de scorecard__rows (position: relative) y replican la
-            misma estructura flex de las filas para alinearse con las celdas */}
-        <div className="scorecard__guides" aria-hidden="true">
-          <div className="scorecard__guides-half">
-            <span className="scorecard__guides-line scorecard__guides-line--1" />
-            <span className="scorecard__guides-line scorecard__guides-line--2" />
-          </div>
-          <span className="scorecard__guides-divider" />
-          <div className="scorecard__guides-half">
-            <span className="scorecard__guides-line scorecard__guides-line--3" />
-            <span className="scorecard__guides-line scorecard__guides-line--4" />
-          </div>
-        </div>
       </div>
     </section>
   );

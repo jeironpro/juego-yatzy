@@ -2,8 +2,8 @@ import { describe, it, expect, vi } from 'vitest';
 import { DICE_COUNT, DIE_FACES } from './constants.js';
 import {
   countByFace,
-  getRerollIndices,
-  rerollSelected,
+  getHeldIndices,
+  rerollUnheld,
   rollDie,
   rollDice,
   uniqueSortedFaces,
@@ -28,19 +28,19 @@ describe('rollDice', () => {
   });
 });
 
-describe('rerollSelected', () => {
-  it('conserva los dados no marcados y relanza los marcados', () => {
+describe('rerollUnheld', () => {
+  it('conserva los dados marcados y relanza los no marcados', () => {
     const random = vi.fn().mockReturnValue(0.99);
-    expect(rerollSelected([1, 2, 3, 4, 5], [true, false, false, false, true], random)).toEqual([
-      6, 2, 3, 4, 6,
+    expect(rerollUnheld([1, 2, 3, 4, 5], [true, false, false, false, true], random)).toEqual([
+      1, 6, 6, 6, 5,
     ]);
   });
 });
 
-describe('getRerollIndices', () => {
-  it('devuelve los índices de los dados marcados para relanzar', () => {
-    expect(getRerollIndices([true, false, true, false, false])).toEqual([0, 2]);
-    expect(getRerollIndices([true, true, true, true, true])).toEqual([0, 1, 2, 3, 4]);
+describe('getHeldIndices', () => {
+  it('devuelve los índices de los dados marcados para conservar', () => {
+    expect(getHeldIndices([true, false, true, false, false])).toEqual([0, 2]);
+    expect(getHeldIndices([true, true, true, true, true])).toEqual([0, 1, 2, 3, 4]);
   });
 });
 

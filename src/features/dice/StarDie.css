@@ -4,8 +4,8 @@
   align-items: center;
   justify-content: center;
   gap: 2px;
-  width: 64px;
-  height: 68px;
+  width: 100%;
+  aspect-ratio: 1;
   padding: 0;
   background-color: var(--color-star);
   border: 3px solid var(--color-border);
@@ -35,13 +35,13 @@
   transform: scale(0.94);
 }
 
-.star-die--marked {
+.star-die--held {
   background-color: var(--color-star-active);
   border-color: var(--color-border);
 }
 
-.star-die--marked .material-symbols-rounded,
-.star-die--marked .star-die__value {
+.star-die--held .material-symbols-rounded,
+.star-die--held .star-die__value {
   color: var(--color-border);
 }
 
